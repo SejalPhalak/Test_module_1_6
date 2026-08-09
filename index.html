@@ -13,7 +13,6 @@
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <script type="text/javascript">
         (function() {
-            // Your API Public Key
             emailjs.init("bVkUfQLi_AQHW5jEI"); 
         })();
     </script>
@@ -451,8 +450,6 @@
             submitBtn.disabled = true;
 
             let score = 0;
-            
-            // Calculate Score & Generate Email Plain Text Content for MCQs
             let emailText = "==========================\nMCQ SUMMARY\n==========================\n\n";
 
             for (let i = 1; i <= totalQuestions; i++) {
@@ -471,25 +468,20 @@
             const percentage = Math.round((score / totalQuestions) * 100);
 
             // ==========================================
-            // FINALIZING PDF HTML STRUCTURE (PRACTICALS ONLY)
+            // PDF HTML STRUCTURE (PRACTICALS ONLY - CLEAN LAYOUT)
             // ==========================================
             pdfHTMLContent = `
-                <div style="padding: 20px; font-family: Arial, sans-serif; color: #333; background: white; width: 100%;">
-                    <h1 style="color: #4f46e5; text-align: center; border-bottom: 2px solid #e5e7eb; padding-bottom: 10px;">Python Assessment Result</h1>
+                <div style="padding: 15px; font-family: Arial, sans-serif; color: #333; background: #ffffff;">
+                    <h2 style="color: #4f46e5; text-align: center; border-bottom: 2px solid #4f46e5; padding-bottom: 8px; margin-bottom: 10px;">Python Assessment - Practical Result</h2>
                     
-                    <div style="margin-top: 15px; font-size: 14px; background: #f9fafb; padding: 10px; border-radius: 8px;">
+                    <div style="margin-bottom: 15px; font-size: 13px; background: #f9fafb; padding: 10px; border-radius: 6px; border: 1px solid #e5e7eb;">
                         <p><strong>Name:</strong> ${esc(studentName)} &nbsp; | &nbsp; <strong>Roll Number:</strong> ${esc(rollNumber)}</p>
-                        <p><strong>Email:</strong> ${esc(email)} &nbsp; | &nbsp; <strong>Date:</strong> ${new Date().toLocaleString()}</p>
+                        <p><strong>Email:</strong> ${esc(email)} &nbsp; | &nbsp; <strong>MCQ Score:</strong> ${score} / ${totalQuestions} (${percentage}%)</p>
                     </div>
                     
-                    <div style="margin-top: 15px; background: #e0e7ff; padding: 15px; border-radius: 8px; text-align:center;">
-                        <h2 style="color: #4338ca; margin: 0;">Total MCQ Score: ${score} / ${totalQuestions} (${percentage}%)</h2>
-                    </div>
-                    
-                    <h2 style="color: #374151; margin-top: 30px; border-bottom: 1px solid #e5e7eb; padding-bottom: 5px;">Practical Code Submissions</h2>
+                    <h3 style="color: #374151; margin-bottom: 15px; border-bottom: 1px solid #d1d5db; padding-bottom: 4px;">Practical Code Submissions</h3>
             `;
 
-            // Append Practicals to Email Text and PDF
             emailText += `\n==========================\nPRACTICAL SUBMISSIONS\n==========================\n\n`;
 
             let practicals = document.querySelectorAll('.practical-question');
@@ -497,19 +489,18 @@
                 let pText = p.querySelector('h3').innerText;
                 let pCode = p.querySelector('textarea').value || "No code submitted.";
                 
-                // Append to PDF HTML (Removed MCQs, kept only practicals)
                 pdfHTMLContent += `
-                <div style="margin-bottom: 20px; padding: 15px; border: 1px solid #d1d5db; border-radius: 8px; background: #ffffff; page-break-inside: avoid;">
-                    <p style="margin: 0 0 10px 0; font-weight: bold; font-size: 14px; color: #1f2937;">${esc(pText)}</p>
-                    <pre style="background: #1f2937; color: #f3f4ff; padding: 15px; border-radius: 5px; white-space: pre-wrap; font-family: monospace; font-size: 13px; margin: 0;">${esc(pCode)}</pre>
+                <div style="margin-bottom: 15px; padding: 12px; border: 1px solid #d1d5db; border-radius: 6px; background: #ffffff; page-break-inside: avoid;">
+                    <p style="margin: 0 0 6px 0; font-weight: bold; font-size: 13px; color: #1f2937;">${esc(pText)}</p>
+                    <pre style="background: #1f2937; color: #f3f4ff; padding: 10px; border-radius: 4px; white-space: pre-wrap; font-family: monospace; font-size: 12px; margin: 0;">${esc(pCode)}</pre>
                 </div>
                 `;
 
-                // Append to Email Text
                 emailText += `${pText}\nCode:\n${pCode}\n\n`;
             });
 
             pdfHTMLContent += `</div>`;
+
 
             // ==========================================
             // PREPARE EMAIL DATA 
@@ -523,7 +514,7 @@
                 score: score,
                 total: totalQuestions,
                 percentage: percentage,
-                practical_answers: emailText  // Assigning the completely formatted string here
+                practical_answers: emailText 
             };
 
             // ==========================================
@@ -557,8 +548,7 @@
         }
 
         // ==========================================
-        // DOWNLOAD PDF BUTTON LOGIC 
-        // Generates clean PDF with NO MCQs, just Practicals
+        // DOWNLOAD PDF BUTTON LOGIC (FIXED BLANK PAGE & TOP WHITESPACE)
         // ==========================================
         document.getElementById("downloadPdfBtn").addEventListener("click", function() {
             const rollNumber = document.getElementById("rollNumber").value.trim() || "Student";
@@ -568,20 +558,24 @@
             const originalText = btn.innerText;
             btn.innerText = "Generating PDF...";
 
-            // Create a temporary container to render the PDF HTML
-            const tempDiv = document.createElement("div");
-            tempDiv.innerHTML = pdfHTMLContent;
+            // Create a dedicated visible container for PDF generation
+            const pdfContainer = document.createElement("div");
+            pdfContainer.innerHTML = pdfHTMLContent;
+            pdfContainer.style.background = "#ffffff";
+            pdfContainer.style.padding = "0px";
+            pdfContainer.style.margin = "0px";
+            document.body.appendChild(pdfContainer);
 
             const opt = {
-                margin:       10, 
+                margin:       [5, 5, 5, 5], // Zero/minimal margins to prevent top whitespace
                 filename:     `${rollNumber}_${studentName}_Practical_Result.pdf`,
                 image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { scale: 2, useCORS: true }, 
+                html2canvas:  { scale: 2, useCORS: true, letterRendering: true }, 
                 jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
             };
             
-            // Generate PDF directly from the rendered HTML container
-            html2pdf().set(opt).from(tempDiv).save().then(function () {
+            html2pdf().set(opt).from(pdfContainer).save().then(function () {
+                document.body.removeChild(pdfContainer); // Cleanup
                 btn.innerText = originalText;
             });
         });
