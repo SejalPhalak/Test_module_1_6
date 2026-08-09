@@ -457,7 +457,7 @@
 
             // Generate PDF HTML Content
             pdfHTMLContent = `
-                <div style="padding: 20px; font-family: Arial, sans-serif; color: #333; background: #fff; width: 800px;">
+                <div style="padding: 20px; font-family: Arial, sans-serif; color: #333; background: #fff; width: 800px; max-width: 100%;">
                     <h1 style="color: #4f46e5; text-align: center; border-bottom: 2px solid #e5e7eb; padding-bottom: 10px;">Python Assessment Result</h1>
                     
                     <div style="margin-top: 15px; font-size: 14px; background: #f9fafb; padding: 10px; border-radius: 8px;">
@@ -497,7 +497,7 @@
                 let textColor = isCorrect ? "#166534" : "#991b1b";
                 let icon = isCorrect ? "✅" : "❌";
                 
-                // Append to PDF HTML (Added page-break-inside: avoid to prevent cutting)
+                // Append to PDF HTML with page-break-inside: avoid to prevent cutting
                 pdfHTMLContent += `
                 <div style="margin-bottom: 15px; padding: 15px; border-radius: 8px; background: ${bgColor}; border: 1px solid #d1d5db; page-break-inside: avoid;">
                     <p style="margin: 0 0 10px 0; font-weight: bold; font-size: 14px; color: #1f2937;">${esc(qText)}</p>
@@ -532,7 +532,7 @@
                 let pText = p.querySelector('h3').innerText;
                 let pCode = p.querySelector('textarea').value || "No code submitted.";
                 
-                // Append to PDF HTML (Added page-break-inside: avoid)
+                // Append to PDF HTML with page-break-inside: avoid
                 pdfHTMLContent += `
                 <div style="margin-bottom: 20px; padding: 15px; border: 1px solid #d1d5db; border-radius: 8px; background: #ffffff; page-break-inside: avoid;">
                     <p style="margin: 0 0 10px 0; font-weight: bold; font-size: 14px; color: #1f2937;">${esc(pText)}</p>
@@ -559,7 +559,7 @@
                 score: score,
                 total: totalQuestions,
                 percentage: percentage,
-                practical_answers: emailText  // Assigning the completely formatted string here
+                practical_answers: emailText 
             };
 
             // ==========================================
@@ -594,36 +594,43 @@
 
         // ==========================================
         // DOWNLOAD PDF BUTTON LOGIC 
+        // Guaranteed 100% full content rendering
         // ==========================================
         document.getElementById("downloadPdfBtn").addEventListener("click", function() {
             const rollNumber = document.getElementById("rollNumber").value.trim() || "Student";
             const studentName = document.getElementById("studentName").value.trim() || "Name";
 
-            // Creating a hidden wrapper attached to the body guarantees exact measurement for all pages
+            const btn = document.getElementById("downloadPdfBtn");
+            const originalText = btn.innerText;
+            btn.innerText = "Generating PDF...";
+
+            // 1. Temporarily hide the main container
+            const mainContainer = document.querySelector('.container');
+            mainContainer.style.display = 'none';
+
+            // 2. Add the PDF content to the actual body so the browser renders it fully
             const pdfWrapper = document.createElement("div");
+            pdfWrapper.id = "tempPdfWrapper";
+            pdfWrapper.style.width = "800px";
+            pdfWrapper.style.margin = "0 auto";
+            pdfWrapper.style.background = "#ffffff";
             pdfWrapper.innerHTML = pdfHTMLContent;
-            pdfWrapper.style.position = "absolute";
-            pdfWrapper.style.top = "-99999px"; 
-            pdfWrapper.style.left = "-99999px"; 
-            pdfWrapper.style.width = "800px"; 
             document.body.appendChild(pdfWrapper);
 
+            // 3. Configuration for PDF
             const opt = {
                 margin:       10, 
                 filename:     `${rollNumber}_${studentName}_Result.pdf`,
                 image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { scale: 2, useCORS: true, windowWidth: 800 }, 
+                html2canvas:  { scale: 2, useCORS: true }, 
                 jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' },
-                pagebreak:    { mode: ['css', 'legacy'] } // Crucial for long, multi-page data
+                pagebreak:    { mode: ['css', 'legacy'] }
             };
-
-            const btn = document.getElementById("downloadPdfBtn");
-            const originalText = btn.innerText;
-            btn.innerText = "Generating PDF...";
             
-            // Generates the PDF from the hidden wrapper, then removes the wrapper
+            // 4. Generate PDF, then restore everything
             html2pdf().set(opt).from(pdfWrapper).save().then(function () {
                 document.body.removeChild(pdfWrapper);
+                mainContainer.style.display = 'block';
                 btn.innerText = originalText;
             });
         });
