@@ -452,12 +452,29 @@
 
             let score = 0;
             
-            // Generate Email Plain Text Content
+            // Calculate Score & Generate Email Plain Text Content for MCQs
             let emailText = "==========================\nMCQ SUMMARY\n==========================\n\n";
 
-            // Generate PDF HTML Content
+            for (let i = 1; i <= totalQuestions; i++) {
+                let qKey = "q" + i;
+                let selectedInput = document.querySelector(`input[name="${qKey}"]:checked`);
+                let studentAnsLetter = selectedInput ? selectedInput.value : "Not Answered";
+                let correctAnsLetter = answers[qKey];
+                
+                let isCorrect = (studentAnsLetter === correctAnsLetter);
+                if (isCorrect) score++;
+
+                let icon = isCorrect ? "✅" : "❌";
+                emailText += `Q${i}: Your Ans: ${studentAnsLetter} | Correct: ${correctAnsLetter} ${icon}\n`;
+            }
+
+            const percentage = Math.round((score / totalQuestions) * 100);
+
+            // ==========================================
+            // FINALIZING PDF HTML STRUCTURE (PRACTICALS ONLY)
+            // ==========================================
             pdfHTMLContent = `
-                <div style="padding: 20px; font-family: Arial, sans-serif; color: #333; background: #fff; width: 800px; max-width: 100%;">
+                <div style="padding: 20px; font-family: Arial, sans-serif; color: #333; background: white; width: 100%;">
                     <h1 style="color: #4f46e5; text-align: center; border-bottom: 2px solid #e5e7eb; padding-bottom: 10px;">Python Assessment Result</h1>
                     
                     <div style="margin-top: 15px; font-size: 14px; background: #f9fafb; padding: 10px; border-radius: 8px;">
@@ -465,66 +482,14 @@
                         <p><strong>Email:</strong> ${esc(email)} &nbsp; | &nbsp; <strong>Date:</strong> ${new Date().toLocaleString()}</p>
                     </div>
                     
-                    <h2 style="color: #374151; margin-top: 30px; border-bottom: 1px solid #e5e7eb; padding-bottom: 5px;">MCQ Answers</h2>
+                    <div style="margin-top: 15px; background: #e0e7ff; padding: 15px; border-radius: 8px; text-align:center;">
+                        <h2 style="color: #4338ca; margin: 0;">Total MCQ Score: ${score} / ${totalQuestions} (${percentage}%)</h2>
+                    </div>
+                    
+                    <h2 style="color: #374151; margin-top: 30px; border-bottom: 1px solid #e5e7eb; padding-bottom: 5px;">Practical Code Submissions</h2>
             `;
 
-            // Process all 36 MCQs
-            for (let i = 1; i <= totalQuestions; i++) {
-                let qKey = "q" + i;
-                
-                // Get Question text
-                let qDiv = document.querySelector(`input[name="${qKey}"]`).closest('.question');
-                let qText = qDiv.querySelector('h3').innerText;
-                
-                // Get Student's selected answer
-                let selectedInput = document.querySelector(`input[name="${qKey}"]:checked`);
-                let studentAnsLetter = selectedInput ? selectedInput.value : "Not Answered";
-                let studentAnsFull = "Not Answered";
-                
-                if (selectedInput) {
-                    studentAnsFull = studentAnsLetter + ") " + selectedInput.parentElement.innerText.trim();
-                }
-                
-                // Get Correct answer
-                let correctAnsLetter = answers[qKey];
-                let correctAnsFull = correctAnsLetter + ") " + qDiv.querySelector(`input[value="${correctAnsLetter}"]`).parentElement.innerText.trim();
-                
-                // Check if correct
-                let isCorrect = (studentAnsLetter === correctAnsLetter);
-                if (isCorrect) score++;
-
-                let bgColor = isCorrect ? "#dcfce7" : "#fee2e2"; 
-                let textColor = isCorrect ? "#166534" : "#991b1b";
-                let icon = isCorrect ? "✅" : "❌";
-                
-                // Append to PDF HTML with page-break-inside: avoid to prevent cutting
-                pdfHTMLContent += `
-                <div style="margin-bottom: 15px; padding: 15px; border-radius: 8px; background: ${bgColor}; border: 1px solid #d1d5db; page-break-inside: avoid;">
-                    <p style="margin: 0 0 10px 0; font-weight: bold; font-size: 14px; color: #1f2937;">${esc(qText)}</p>
-                    <p style="margin: 5px 0; font-size: 13px; color: ${textColor};"><strong>Your Answer:</strong> ${esc(studentAnsFull)} ${icon}</p>
-                    ${!isCorrect ? `<p style="margin: 5px 0; font-size: 13px; color: #166534;"><strong>Correct Answer:</strong> ${esc(correctAnsFull)}</p>` : ''}
-                </div>
-                `;
-
-                // Append to Email Text
-                emailText += `Q${i}: Your Ans: ${studentAnsLetter} | Correct: ${correctAnsLetter} ${icon}\n`;
-            }
-
-            const percentage = Math.round((score / totalQuestions) * 100);
-
-            // Add the dynamic score to PDF
-            pdfHTMLContent = pdfHTMLContent.replace(
-                '<h2 style="color: #374151; margin-top: 30px; border-bottom: 1px solid #e5e7eb; padding-bottom: 5px;">MCQ Answers</h2>',
-                `<div style="margin-top: 20px; background: #e0e7ff; padding: 15px; border-radius: 8px; text-align:center;">
-                    <h2 style="color: #4338ca; margin: 0;">Total Score: ${score} / ${totalQuestions} (${percentage}%)</h2>
-                 </div>
-                 <h2 style="color: #374151; margin-top: 30px; border-bottom: 1px solid #e5e7eb; padding-bottom: 5px;">MCQ Answers</h2>`
-            );
-
-            // Add Practical Section
-            pdfHTMLContent += `
-                <h2 style="color: #374151; margin-top: 30px; border-bottom: 1px solid #e5e7eb; padding-bottom: 5px;">Practical Code Submissions</h2>
-            `;
+            // Append Practicals to Email Text and PDF
             emailText += `\n==========================\nPRACTICAL SUBMISSIONS\n==========================\n\n`;
 
             let practicals = document.querySelectorAll('.practical-question');
@@ -532,7 +497,7 @@
                 let pText = p.querySelector('h3').innerText;
                 let pCode = p.querySelector('textarea').value || "No code submitted.";
                 
-                // Append to PDF HTML with page-break-inside: avoid
+                // Append to PDF HTML (Removed MCQs, kept only practicals)
                 pdfHTMLContent += `
                 <div style="margin-bottom: 20px; padding: 15px; border: 1px solid #d1d5db; border-radius: 8px; background: #ffffff; page-break-inside: avoid;">
                     <p style="margin: 0 0 10px 0; font-weight: bold; font-size: 14px; color: #1f2937;">${esc(pText)}</p>
@@ -546,7 +511,6 @@
 
             pdfHTMLContent += `</div>`;
 
-
             // ==========================================
             // PREPARE EMAIL DATA 
             // ==========================================
@@ -559,7 +523,7 @@
                 score: score,
                 total: totalQuestions,
                 percentage: percentage,
-                practical_answers: emailText 
+                practical_answers: emailText  // Assigning the completely formatted string here
             };
 
             // ==========================================
@@ -594,7 +558,7 @@
 
         // ==========================================
         // DOWNLOAD PDF BUTTON LOGIC 
-        // Guaranteed 100% full content rendering
+        // Generates clean PDF with NO MCQs, just Practicals
         // ==========================================
         document.getElementById("downloadPdfBtn").addEventListener("click", function() {
             const rollNumber = document.getElementById("rollNumber").value.trim() || "Student";
@@ -604,33 +568,20 @@
             const originalText = btn.innerText;
             btn.innerText = "Generating PDF...";
 
-            // 1. Temporarily hide the main container
-            const mainContainer = document.querySelector('.container');
-            mainContainer.style.display = 'none';
+            // Create a temporary container to render the PDF HTML
+            const tempDiv = document.createElement("div");
+            tempDiv.innerHTML = pdfHTMLContent;
 
-            // 2. Add the PDF content to the actual body so the browser renders it fully
-            const pdfWrapper = document.createElement("div");
-            pdfWrapper.id = "tempPdfWrapper";
-            pdfWrapper.style.width = "800px";
-            pdfWrapper.style.margin = "0 auto";
-            pdfWrapper.style.background = "#ffffff";
-            pdfWrapper.innerHTML = pdfHTMLContent;
-            document.body.appendChild(pdfWrapper);
-
-            // 3. Configuration for PDF
             const opt = {
                 margin:       10, 
-                filename:     `${rollNumber}_${studentName}_Result.pdf`,
+                filename:     `${rollNumber}_${studentName}_Practical_Result.pdf`,
                 image:        { type: 'jpeg', quality: 0.98 },
                 html2canvas:  { scale: 2, useCORS: true }, 
-                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' },
-                pagebreak:    { mode: ['css', 'legacy'] }
+                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
             };
             
-            // 4. Generate PDF, then restore everything
-            html2pdf().set(opt).from(pdfWrapper).save().then(function () {
-                document.body.removeChild(pdfWrapper);
-                mainContainer.style.display = 'block';
+            // Generate PDF directly from the rendered HTML container
+            html2pdf().set(opt).from(tempDiv).save().then(function () {
                 btn.innerText = originalText;
             });
         });
