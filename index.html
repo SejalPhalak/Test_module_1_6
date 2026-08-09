@@ -1,0 +1,2271 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Python Programming Assessment</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6fb;
+            color: #1f2937;
+        }
+
+        .container {
+            width: 92%;
+            max-width: 1000px;
+            margin: 30px auto;
+        }
+
+        /* HEADER */
+
+        .header {
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            color: white;
+            padding: 40px 25px;
+            text-align: center;
+            border-radius: 18px;
+            margin-bottom: 25px;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            opacity: 0.9;
+        }
+
+        /* CARD */
+
+        .card {
+            background: white;
+            padding: 30px;
+            margin-bottom: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.07);
+        }
+
+        .card h2 {
+            margin-bottom: 20px;
+        }
+
+        /* STUDENT DETAILS */
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 7px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 13px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 15px;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #4f46e5;
+        }
+
+        /* PROGRESS */
+
+        .progress-box {
+            background: white;
+            padding: 15px 20px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            position: sticky;
+            top: 10px;
+            z-index: 10;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        .progress {
+            height: 9px;
+            background: #e5e7eb;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        #progressBar {
+            width: 0%;
+            height: 100%;
+            background: #4f46e5;
+            transition: 0.3s;
+        }
+
+        /* MODULE */
+
+        .module-header {
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+        }
+
+        .module-number {
+            color: #4f46e5;
+            font-size: 14px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .module-header h2 {
+            margin-top: 5px;
+        }
+
+        /* QUESTION */
+
+        .question {
+            border: 1px solid #e5e7eb;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 18px;
+        }
+
+        .question h3 {
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+
+        .option {
+            display: block;
+            padding: 11px 14px;
+            margin: 7px 0;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .option:hover {
+            background: #f5f3ff;
+            border-color: #818cf8;
+        }
+
+        .option input {
+            margin-right: 10px;
+        }
+
+        /* PRACTICAL */
+
+        .practical-question {
+            margin-bottom: 25px;
+        }
+
+        .practical-question h3 {
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 170px;
+            padding: 15px;
+            font-family: Consolas, monospace;
+            border: 1px solid #d1d5db;
+            border-radius: 10px;
+            resize: vertical;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #4f46e5;
+        }
+
+        /* SUBMIT */
+
+        .submit-area {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .submit-btn {
+            background: #4f46e5;
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 8px;
+            font-size: 17px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .submit-btn:hover {
+            background: #4338ca;
+        }
+
+        /* RESULT */
+
+        #resultPage {
+            display: none;
+        }
+
+        .result-header {
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            color: white;
+            text-align: center;
+            padding: 35px;
+            border-radius: 18px;
+            margin-bottom: 25px;
+        }
+
+        .result-header h1 {
+            margin-bottom: 15px;
+        }
+
+        .student-info {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+
+        .student-info div {
+            background: #f5f3ff;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .student-info strong {
+            display: block;
+            margin-bottom: 5px;
+            color: #4f46e5;
+        }
+
+        .score-card {
+            background: white;
+            padding: 30px;
+            text-align: center;
+            border-radius: 15px;
+            margin-bottom: 25px;
+        }
+
+        .score {
+            font-size: 55px;
+            font-weight: bold;
+            color: #4f46e5;
+        }
+
+        .percentage {
+            font-size: 22px;
+            margin-top: 5px;
+            font-weight: bold;
+        }
+
+        /* RESULT QUESTIONS */
+
+        .result-question {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            border-left: 5px solid #9ca3af;
+        }
+
+        .result-question.correct {
+            border-left-color: #16a34a;
+            background: #f0fdf4;
+        }
+
+        .result-question.wrong {
+            border-left-color: #dc2626;
+            background: #fef2f2;
+        }
+
+        .answer {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 7px;
+            background: white;
+        }
+
+        .correct-text {
+            color: #15803d;
+            font-weight: bold;
+        }
+
+        .wrong-text {
+            color: #dc2626;
+            font-weight: bold;
+        }
+
+        /* PRACTICAL RESULT */
+
+        .practical-result {
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 18px;
+        }
+
+        .code-answer {
+            background: #111827;
+            color: #e5e7eb;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+            white-space: pre-wrap;
+            font-family: Consolas, monospace;
+            overflow-x: auto;
+        }
+
+        .restart-btn {
+            display: block;
+            margin: 30px auto;
+            padding: 14px 30px;
+            background: #4f46e5;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        /* MOBILE */
+
+        @media(max-width: 700px) {
+
+            .container {
+                width: 95%;
+            }
+
+            .header h1 {
+                font-size: 25px;
+            }
+
+            .card {
+                padding: 20px;
+            }
+
+            .student-info {
+                grid-template-columns: 1fr;
+            }
+
+            .question {
+                padding: 15px;
+            }
+
+            .score {
+                font-size: 45px;
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- ================================================= -->
+    <!-- ASSESSMENT PAGE -->
+    <!-- ================================================= -->
+
+    <div id="assessmentPage">
+
+        <div class="header">
+
+            <h1>Python Programming Assessment</h1>
+
+            <p>
+                6 Modules | MCQ + Practical Questions
+            </p>
+
+        </div>
+
+
+        <!-- STUDENT DETAILS -->
+
+        <div class="card">
+
+            <h2>Student Details</h2>
+
+            <div class="form-group">
+
+                <label>Student Name</label>
+
+                <input
+                    type="text"
+                    id="studentName"
+                    placeholder="Enter student name"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>Roll Number</label>
+
+                <input
+                    type="text"
+                    id="rollNumber"
+                    placeholder="Enter roll number"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>Email Address</label>
+
+                <input
+                    type="email"
+                    id="email"
+                    placeholder="Enter email address"
+                >
+
+            </div>
+
+        </div>
+
+
+        <!-- PROGRESS -->
+
+        <div class="progress-box">
+
+            <div class="progress-info">
+
+                <span>MCQ Progress</span>
+
+                <span id="progressText">0%</span>
+
+            </div>
+
+            <div class="progress">
+
+                <div id="progressBar"></div>
+
+            </div>
+
+        </div>
+
+
+        <form id="quizForm">
+
+
+            <!-- ================================================= -->
+            <!-- MODULE 1 -->
+            <!-- ================================================= -->
+
+            <div class="card">
+
+                <div class="module-header">
+
+                    <span class="module-number">
+                        Module 1
+                    </span>
+
+                    <h2>Introduction to Python</h2>
+
+                </div>
+
+
+                <div class="question">
+
+                    <h3>1. Who created Python?</h3>
+
+                    <label class="option">
+                        <input type="radio" name="q1" value="James Gosling">
+                        James Gosling
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q1" value="Guido van Rossum">
+                        Guido van Rossum
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q1" value="Dennis Ritchie">
+                        Dennis Ritchie
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q1" value="Bjarne Stroustrup">
+                        Bjarne Stroustrup
+                    </label>
+
+                </div>
+
+
+                <div class="question">
+
+                    <h3>2. Python is a ______ programming language.</h3>
+
+                    <label class="option">
+                        <input type="radio" name="q2" value="Low-level">
+                        Low-level
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q2" value="Machine-level">
+                        Machine-level
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q2" value="High-level">
+                        High-level
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q2" value="Assembly">
+                        Assembly
+                    </label>
+
+                </div>
+
+
+                <div class="question">
+
+                    <h3>3. Which symbol is used to write a comment?</h3>
+
+                    <label class="option">
+                        <input type="radio" name="q3" value="//">
+                        //
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q3" value="/* */">
+                        /* */
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q3" value="#">
+                        #
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q3" value="--">
+                        --
+                    </label>
+
+                </div>
+
+
+                <div class="question">
+
+                    <h3>4. Which function is used to check datatype?</h3>
+
+                    <label class="option">
+                        <input type="radio" name="q4" value="datatype()">
+                        datatype()
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q4" value="type()">
+                        type()
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q4" value="typeof()">
+                        typeof()
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q4" value="checktype()">
+                        checktype()
+                    </label>
+
+                </div>
+
+
+                <div class="question">
+
+                    <h3>5. Which is a valid Python variable name?</h3>
+
+                    <label class="option">
+                        <input type="radio" name="q5" value="2name">
+                        2name
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q5" value="my-name">
+                        my-name
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q5" value="my_name">
+                        my_name
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q5" value="class">
+                        class
+                    </label>
+
+                </div>
+
+
+                <div class="question">
+
+                    <h3>6. Which module is used for command-line arguments?</h3>
+
+                    <label class="option">
+                        <input type="radio" name="q6" value="os">
+                        os
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q6" value="sys">
+                        sys
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q6" value="math">
+                        math
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q6" value="command">
+                        command
+                    </label>
+
+                </div>
+
+            </div>
+
+
+            <!-- ================================================= -->
+            <!-- MODULE 2 -->
+            <!-- ================================================= -->
+
+            <div class="card">
+
+                <div class="module-header">
+
+                    <span class="module-number">
+                        Module 2
+                    </span>
+
+                    <h2>Control Statements & Strings</h2>
+
+                </div>
+
+
+                <div class="question">
+
+                    <h3>7. Which function splits a string?</h3>
+
+                    <label class="option">
+                        <input type="radio" name="q7" value="divide()">
+                        divide()
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q7" value="split()">
+                        split()
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q7" value="separate()">
+                        separate()
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q7" value="break()">
+                        break()
+                    </label>
+
+                </div>
+
+
+                <div class="question">
+
+                    <h3>8. Which function returns the length?</h3>
+
+                    <label class="option">
+                        <input type="radio" name="q8" value="length()">
+                        length()
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q8" value="size()">
+                        size()
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q8" value="len()">
+                        len()
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q8" value="count()">
+                        count()
+                    </label>
+
+                </div>
+
+
+                <div class="question">
+
+                    <h3>9. Which operator checks membership?</h3>
+
+                    <label class="option">
+                        <input type="radio" name="q9" value="is">
+                        is
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q9" value="in">
+                        in
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q9" value="exists">
+                        exists
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q9" value="has">
+                        has
+                    </label>
+
+                </div>
+
+
+                <div class="question">
+
+                    <h3>10. Which method converts text to uppercase?</h3>
+
+                    <label class="option">
+                        <input type="radio" name="q10" value="upper()">
+                        upper()
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q10" value="uppercase()">
+                        uppercase()
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q10" value="capital()">
+                        capital()
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q10" value="title()">
+                        title()
+                    </label>
+
+                </div>
+
+
+                <div class="question">
+
+                    <h3>11. Which statement is used for multiple conditions?</h3>
+
+                    <label class="option">
+                        <input type="radio" name="q11" value="if-if">
+                        if-if
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q11" value="if-elif-else">
+                        if-elif-else
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q11" value="loop-if">
+                        loop-if
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q11" value="check-else">
+                        check-else
+                    </label>
+
+                </div>
+
+
+                <div class="question">
+
+                    <h3>12. Which function generates a sequence of numbers?</h3>
+
+                    <label class="option">
+                        <input type="radio" name="q12" value="numbers()">
+                        numbers()
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q12" value="sequence()">
+                        sequence()
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q12" value="range()">
+                        range()
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q12" value="generate()">
+                        generate()
+                    </label>
+
+                </div>
+
+            </div>
+
+
+            <!-- ================================================= -->
+            <!-- MODULE 3 -->
+            <!-- ================================================= -->
+
+            <div class="card">
+
+                <div class="module-header">
+
+                    <span class="module-number">
+                        Module 3
+                    </span>
+
+                    <h2>Lists, Tuples & Generators</h2>
+
+                </div>
+
+
+                <div class="question">
+
+                    <h3>13. Which collection is mutable?</h3>
+
+                    <label class="option">
+                        <input type="radio" name="q13" value="Tuple">
+                        Tuple
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q13" value="List">
+                        List
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q13" value="String">
+                        String
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q13" value="None">
+                        None
+                    </label>
+
+                </div>
+
+
+                <div class="question">
+
+                    <h3>14. Which method adds an element to the end of a list?</h3>
+
+                    <label class="option">
+                        <input type="radio" name="q14" value="insert()">
+                        insert()
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q14" value="add()">
+                        add()
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q14" value="append()">
+                        append()
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q14" value="push()">
+                        push()
+                    </label>
+
+                </div>
+
+
+                <div class="question">
+
+                    <h3>15. Which method removes an element using its index?</h3>
+
+                    <label class="option">
+                        <input type="radio" name="q15" value="remove()">
+                        remove()
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q15" value="pop()">
+                        pop()
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q15" value="delete()">
+                        delete()
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q15" value="clear()">
+                        clear()
+                    </label>
+
+                </div>
+
+
+                <div class="question">
+
+                    <h3>16. Which keyword is used in a generator?</h3>
+
+                    <label class="option">
+                        <input type="radio" name="q16" value="return">
+                        return
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q16" value="yield">
+                        yield
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q16" value="generate">
+                        generate
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q16" value="next">
+                        next
+                    </label>
+
+                </div>
+
+
+                <div class="question">
+
+                    <h3>17. A lambda function is a ______ function.</h3>
+
+                    <label class="option">
+                        <input type="radio" name="q17" value="Named">
+                        Named
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q17" value="Anonymous">
+                        Anonymous
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q17" value="Class">
+                        Class
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q17" value="Loop">
+                        Loop
+                    </label>
+
+                </div>
+
+
+                <div class="question">
+
+                    <h3>18. Which function returns the next item from an iterator?</h3>
+
+                    <label class="option">
+                        <input type="radio" name="q18" value="next()">
+                        next()
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q18" value="forward()">
+                        forward()
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q18" value="move()">
+                        move()
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q18" value="iterator()">
+                        iterator()
+                    </label>
+
+                </div>
+
+            </div>
+
+
+            <!-- ================================================= -->
+            <!-- MODULE 4 -->
+            <!-- ================================================= -->
+
+            <div class="card">
+
+                <div class="module-header">
+
+                    <span class="module-number">
+                        Module 4
+                    </span>
+
+                    <h2>Dictionaries & Sets</h2>
+
+                </div>
+
+
+                <div class="question">
+
+                    <h3>19. A dictionary stores data in ______ pairs.</h3>
+
+                    <label class="option">
+                        <input type="radio" name="q19" value="value:value">
+                        value:value
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q19" value="key:value">
+                        key:value
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q19" value="index:value">
+                        index:value
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q19" value="key:index">
+                        key:index
+                    </label>
+
+                </div>
+
+
+                <div class="question">
+
+                    <h3>20. Which method safely retrieves a dictionary value?</h3>
+
+                    <label class="option">
+                        <input type="radio" name="q20" value="find()">
+                        find()
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q20" value="get()">
+                        get()
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q20" value="search()">
+                        search()
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q20" value="value()">
+                        value()
+                    </label>
+
+                </div>
+
+
+                <div class="question">
+
+                    <h3>21. Which method returns dictionary keys?</h3>
+
+                    <label class="option">
+                        <input type="radio" name="q21" value="keys()">
+                        keys()
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q21" value="key()">
+                        key()
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q21" value="getkeys()">
+                        getkeys()
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q21" value="indexes()">
+                        indexes()
+                    </label>
+
+                </div>
+
+
+                <div class="question">
+
+                    <h3>22. A set contains ______ values.</h3>
+
+                    <label class="option">
+                        <input type="radio" name="q22" value="Duplicate">
+                        Duplicate
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q22" value="Unique">
+                        Unique
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q22" value="Indexed">
+                        Indexed
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q22" value="Ordered">
+                        Ordered
+                    </label>
+
+                </div>
+
+
+                <div class="question">
+
+                    <h3>23. Which method adds an item to a set?</h3>
+
+                    <label class="option">
+                        <input type="radio" name="q23" value="append()">
+                        append()
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q23" value="insert()">
+                        insert()
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q23" value="add()">
+                        add()
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q23" value="push()">
+                        push()
+                    </label>
+
+                </div>
+
+            </div>
+
+
+            <!-- ================================================= -->
+            <!-- MODULE 5 -->
+            <!-- ================================================= -->
+
+            <div class="card">
+
+                <div class="module-header">
+
+                    <span class="module-number">
+                        Module 5
+                    </span>
+
+                    <h2>Files, ASCII & Pickle</h2>
+
+                </div>
+
+
+                <div class="question">
+
+                    <h3>24. Which mode is used to read a text file?</h3>
+
+                    <label class="option">
+                        <input type="radio" name="q24" value="w">
+                        w
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q24" value="r">
+                        r
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q24" value="a">
+                        a
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q24" value="x">
+                        x
+                    </label>
+
+                </div>
+
+
+                <div class="question">
+
+                    <h3>25. Which mode is used to write to a file?</h3>
+
+                    <label class="option">
+                        <input type="radio" name="q25" value="r">
+                        r
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q25" value="w">
+                        w
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q25" value="a">
+                        a
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q25" value="rb">
+                        rb
+                    </label>
+
+                </div>
+
+
+                <div class="question">
+
+                    <h3>26. Which mode is used to append data?</h3>
+
+                    <label class="option">
+                        <input type="radio" name="q26" value="r">
+                        r
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q26" value="w">
+                        w
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q26" value="a">
+                        a
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q26" value="x">
+                        x
+                    </label>
+
+                </div>
+
+
+                <div class="question">
+
+                    <h3>27. Which function returns the ASCII value of a character?</h3>
+
+                    <label class="option">
+                        <input type="radio" name="q27" value="chr()">
+                        chr()
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q27" value="ascii()">
+                        ascii()
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q27" value="ord()">
+                        ord()
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q27" value="code()">
+                        code()
+                    </label>
+
+                </div>
+
+
+                <div class="question">
+
+                    <h3>28. Which function converts an integer into a character?</h3>
+
+                    <label class="option">
+                        <input type="radio" name="q28" value="ord()">
+                        ord()
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q28" value="chr()">
+                        chr()
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q28" value="char()">
+                        char()
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q28" value="convert()">
+                        convert()
+                    </label>
+
+                </div>
+
+
+                <div class="question">
+
+                    <h3>29. Which function writes an object using Pickle?</h3>
+
+                    <label class="option">
+                        <input type="radio" name="q29" value="pickle.write()">
+                        pickle.write()
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q29" value="pickle.dump()">
+                        pickle.dump()
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q29" value="pickle.save()">
+                        pickle.save()
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q29" value="pickle.store()">
+                        pickle.store()
+                    </label>
+
+                </div>
+
+
+                <div class="question">
+
+                    <h3>30. Which function reads a Pickle object?</h3>
+
+                    <label class="option">
+                        <input type="radio" name="q30" value="pickle.read()">
+                        pickle.read()
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q30" value="pickle.get()">
+                        pickle.get()
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q30" value="pickle.load()">
+                        pickle.load()
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q30" value="pickle.open()">
+                        pickle.open()
+                    </label>
+
+                </div>
+
+            </div>
+
+
+            <!-- ================================================= -->
+            <!-- MODULE 6 -->
+            <!-- ================================================= -->
+
+            <div class="card">
+
+                <div class="module-header">
+
+                    <span class="module-number">
+                        Module 6
+                    </span>
+
+                    <h2>Functions & Modules</h2>
+
+                </div>
+
+
+                <div class="question">
+
+                    <h3>31. Which keyword is used to define a function?</h3>
+
+                    <label class="option">
+                        <input type="radio" name="q31" value="function">
+                        function
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q31" value="define">
+                        define
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q31" value="def">
+                        def
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q31" value="fun">
+                        fun
+                    </label>
+
+                </div>
+
+
+                <div class="question">
+
+                    <h3>32. Which keyword sends a value back from a function?</h3>
+
+                    <label class="option">
+                        <input type="radio" name="q32" value="send">
+                        send
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q32" value="return">
+                        return
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q32" value="output">
+                        output
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q32" value="yield">
+                        yield
+                    </label>
+
+                </div>
+
+
+                <div class="question">
+
+                    <h3>33. Which syntax represents arbitrary positional arguments?</h3>
+
+                    <label class="option">
+                        <input type="radio" name="q33" value="*args">
+                        *args
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q33" value="**args">
+                        **args
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q33" value="&args">
+                        &args
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q33" value="@args">
+                        @args
+                    </label>
+
+                </div>
+
+
+                <div class="question">
+
+                    <h3>34. Which module provides mathematical functions?</h3>
+
+                    <label class="option">
+                        <input type="radio" name="q34" value="datetime">
+                        datetime
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q34" value="math">
+                        math
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q34" value="random">
+                        random
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q34" value="sys">
+                        sys
+                    </label>
+
+                </div>
+
+
+                <div class="question">
+
+                    <h3>35. Which function returns the square root?</h3>
+
+                    <label class="option">
+                        <input type="radio" name="q35" value="math.square()">
+                        math.square()
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q35" value="math.root()">
+                        math.root()
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q35" value="math.sqrt()">
+                        math.sqrt()
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q35" value="math.sq()">
+                        math.sq()
+                    </label>
+
+                </div>
+
+
+                <div class="question">
+
+                    <h3>36. Which module is used for dates and times?</h3>
+
+                    <label class="option">
+                        <input type="radio" name="q36" value="timeDate">
+                        timeDate
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q36" value="calendar">
+                        calendar
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q36" value="datetime">
+                        datetime
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="q36" value="dateTimeModule">
+                        dateTimeModule
+                    </label>
+
+                </div>
+
+            </div>
+
+
+            <!-- ================================================= -->
+            <!-- PRACTICAL -->
+            <!-- ================================================= -->
+
+            <div class="card">
+
+                <div class="module-header">
+
+                    <span class="module-number">
+                        Practical
+                    </span>
+
+                    <h2>Practical Programming Questions</h2>
+
+                </div>
+
+
+                <div class="practical-question">
+
+                    <h3>
+                        37. Write a Python program to print
+                        "Hello World" and numbers from 1 to 10.
+                    </h3>
+
+                    <textarea
+                        name="p1"
+                        placeholder="Write your Python code here..."
+                    ></textarea>
+
+                </div>
+
+
+                <div class="practical-question">
+
+                    <h3>
+                        38. Write a program to check whether
+                        a person is eligible to vote.
+                    </h3>
+
+                    <textarea
+                        name="p2"
+                        placeholder="Write your Python code here..."
+                    ></textarea>
+
+                </div>
+
+
+                <div class="practical-question">
+
+                    <h3>
+                        39. Write a program to demonstrate list
+                        operations append(), insert(), remove(),
+                        pop() and sort().
+                    </h3>
+
+                    <textarea
+                        name="p3"
+                        placeholder="Write your Python code here..."
+                    ></textarea>
+
+                </div>
+
+
+                <div class="practical-question">
+
+                    <h3>
+                        40. Write a function to calculate
+                        Simple Interest.
+                    </h3>
+
+                    <textarea
+                        name="p4"
+                        placeholder="Write your Python code here..."
+                    ></textarea>
+
+                </div>
+
+
+                <div class="practical-question">
+
+                    <h3>
+                        41. Write a program to find the ASCII
+                        value of a character using ord().
+                    </h3>
+
+                    <textarea
+                        name="p5"
+                        placeholder="Write your Python code here..."
+                    ></textarea>
+
+                </div>
+
+
+                <div class="practical-question">
+
+                    <h3>
+                        42. Write a program to write and read
+                        data from a text file.
+                    </h3>
+
+                    <textarea
+                        name="p6"
+                        placeholder="Write your Python code here..."
+                    ></textarea>
+
+                </div>
+
+            </div>
+
+
+            <!-- SUBMIT -->
+
+            <div class="submit-area">
+
+                <button
+                    type="submit"
+                    class="submit-btn"
+                >
+                    Submit Assessment
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+
+    <!-- ================================================= -->
+    <!-- RESULT PAGE -->
+    <!-- ================================================= -->
+
+    <div id="resultPage">
+
+        <div class="result-header">
+
+            <h1>🎉 Assessment Result</h1>
+
+            <p>Your assessment has been submitted successfully.</p>
+
+        </div>
+
+
+        <!-- STUDENT INFO -->
+
+        <div class="student-info">
+
+            <div>
+
+                <strong>Student Name</strong>
+
+                <span id="resultName"></span>
+
+            </div>
+
+
+            <div>
+
+                <strong>Roll Number</strong>
+
+                <span id="resultRoll"></span>
+
+            </div>
+
+
+            <div>
+
+                <strong>Email</strong>
+
+                <span id="resultEmail"></span>
+
+            </div>
+
+        </div>
+
+
+        <!-- SCORE -->
+
+        <div class="score-card">
+
+            <h2>MCQ Score</h2>
+
+            <div class="score">
+
+                <span id="finalScore">0</span>
+                /
+                <span id="totalScore">36</span>
+
+            </div>
+
+            <div class="percentage">
+
+                <span id="finalPercentage">0%</span>
+
+            </div>
+
+        </div>
+
+
+        <!-- ANSWER REVIEW -->
+
+        <div class="card">
+
+            <div class="module-header">
+
+                <span class="module-number">
+                    Answer Review
+                </span>
+
+                <h2>MCQ Answers</h2>
+
+            </div>
+
+            <div id="answerReview"></div>
+
+        </div>
+
+
+        <!-- PRACTICAL ANSWERS -->
+
+        <div class="card">
+
+            <div class="module-header">
+
+                <span class="module-number">
+                    Practical
+                </span>
+
+                <h2>Your Practical Answers</h2>
+
+            </div>
+
+            <div id="practicalReview"></div>
+
+        </div>
+
+
+        <button
+            class="restart-btn"
+            onclick="location.reload()"
+        >
+            Take Assessment Again
+        </button>
+
+    </div>
+
+</div>
+
+
+<script>
+
+    /* =====================================================
+       CORRECT ANSWERS
+    ===================================================== */
+
+    const correctAnswers = {
+
+        q1: "Guido van Rossum",
+        q2: "High-level",
+        q3: "#",
+        q4: "type()",
+        q5: "my_name",
+        q6: "sys",
+
+        q7: "split()",
+        q8: "len()",
+        q9: "in",
+        q10: "upper()",
+        q11: "if-elif-else",
+        q12: "range()",
+
+        q13: "List",
+        q14: "append()",
+        q15: "pop()",
+        q16: "yield",
+        q17: "Anonymous",
+        q18: "next()",
+
+        q19: "key:value",
+        q20: "get()",
+        q21: "keys()",
+        q22: "Unique",
+        q23: "add()",
+
+        q24: "r",
+        q25: "w",
+        q26: "a",
+        q27: "ord()",
+        q28: "chr()",
+        q29: "pickle.dump()",
+        q30: "pickle.load()",
+
+        q31: "def",
+        q32: "return",
+        q33: "*args",
+        q34: "math",
+        q35: "math.sqrt()",
+        q36: "datetime"
+
+    };
+
+
+    /* =====================================================
+       QUESTION TEXT
+    ===================================================== */
+
+    const questionText = {
+
+        q1: "Who created Python?",
+        q2: "Python is a ______ programming language.",
+        q3: "Which symbol is used to write a comment?",
+        q4: "Which function is used to check datatype?",
+        q5: "Which is a valid Python variable name?",
+        q6: "Which module is used for command-line arguments?",
+
+        q7: "Which function splits a string?",
+        q8: "Which function returns the length?",
+        q9: "Which operator checks membership?",
+        q10: "Which method converts text to uppercase?",
+        q11: "Which statement is used for multiple conditions?",
+        q12: "Which function generates a sequence of numbers?",
+
+        q13: "Which collection is mutable?",
+        q14: "Which method adds an element to the end of a list?",
+        q15: "Which method removes an element using its index?",
+        q16: "Which keyword is used in a generator?",
+        q17: "A lambda function is a ______ function.",
+        q18: "Which function returns the next item from an iterator?",
+
+        q19: "A dictionary stores data in ______ pairs.",
+        q20: "Which method safely retrieves a dictionary value?",
+        q21: "Which method returns dictionary keys?",
+        q22: "A set contains ______ values.",
+        q23: "Which method adds an item to a set?",
+
+        q24: "Which mode is used to read a text file?",
+        q25: "Which mode is used to write to a file?",
+        q26: "Which mode is used to append data?",
+        q27: "Which function returns the ASCII value of a character?",
+        q28: "Which function converts an integer into a character?",
+        q29: "Which function writes an object using Pickle?",
+        q30: "Which function reads a Pickle object?",
+
+        q31: "Which keyword is used to define a function?",
+        q32: "Which keyword sends a value back from a function?",
+        q33: "Which syntax represents arbitrary positional arguments?",
+        q34: "Which module provides mathematical functions?",
+        q35: "Which function returns the square root?",
+        q36: "Which module is used for dates and times?"
+
+    };
+
+
+    /* =====================================================
+       PROGRESS
+    ===================================================== */
+
+    const totalQuestions = Object.keys(correctAnswers).length;
+
+    document.querySelectorAll(
+        'input[type="radio"]'
+    ).forEach(function(radio) {
+
+        radio.addEventListener("change", updateProgress);
+
+    });
+
+
+    function updateProgress() {
+
+        let answered = 0;
+
+        for (let i = 1; i <= totalQuestions; i++) {
+
+            const selected =
+                document.querySelector(
+                    `input[name="q${i}"]:checked`
+                );
+
+            if (selected) {
+                answered++;
+            }
+
+        }
+
+        const percentage =
+            Math.round(
+                (answered / totalQuestions) * 100
+            );
+
+        document.getElementById("progressBar")
+            .style.width = percentage + "%";
+
+        document.getElementById("progressText")
+            .textContent = percentage + "%";
+
+    }
+
+
+    /* =====================================================
+       SUBMIT
+    ===================================================== */
+
+    document.getElementById("quizForm")
+        .addEventListener("submit", function(event) {
+
+        event.preventDefault();
+
+
+        /* STUDENT DETAILS */
+
+        const name =
+            document.getElementById("studentName")
+                .value.trim();
+
+        const roll =
+            document.getElementById("rollNumber")
+                .value.trim();
+
+        const email =
+            document.getElementById("email")
+                .value.trim();
+
+
+        if (name === "" ||
+            roll === "" ||
+            email === "") {
+
+            alert(
+                "Please fill Student Name, Roll Number and Email."
+            );
+
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
+
+            return;
+
+        }
+
+
+        /* SCORE */
+
+        let score = 0;
+
+
+        let reviewHTML = "";
+
+
+        for (let i = 1; i <= totalQuestions; i++) {
+
+            const questionName = "q" + i;
+
+            const selected =
+                document.querySelector(
+                    `input[name="${questionName}"]:checked`
+                );
+
+
+            let studentAnswer =
+                selected ? selected.value : "Not Answered";
+
+
+            const correctAnswer =
+                correctAnswers[questionName];
+
+
+            const isCorrect =
+                studentAnswer === correctAnswer;
+
+
+            if (isCorrect) {
+                score++;
+            }
+
+
+            /* RESULT HTML */
+
+            reviewHTML += `
+
+                <div class="result-question
+                    ${isCorrect ? "correct" : "wrong"}">
+
+                    <h3>
+                        ${i}. ${questionText[questionName]}
+                    </h3>
+
+                    <div class="answer">
+
+                        <strong>Your Answer:</strong>
+
+                        <span class="
+                            ${isCorrect
+                                ? "correct-text"
+                                : "wrong-text"}">
+
+                            ${studentAnswer}
+
+                        </span>
+
+                    </div>
+
+
+                    <div class="answer">
+
+                        <strong>Correct Answer:</strong>
+
+                        <span class="correct-text">
+
+                            ${correctAnswer}
+
+                        </span>
+
+                    </div>
+
+
+                    <div class="answer">
+
+                        <strong>Status:</strong>
+
+                        ${isCorrect
+                            ? "✅ Correct"
+                            : "❌ Wrong"}
+
+                    </div>
+
+                </div>
+
+            `;
+
+        }
+
+
+        /* PERCENTAGE */
+
+        const percentage =
+            Math.round(
+                (score / totalQuestions) * 100
+            );
+
+
+        /* SHOW STUDENT INFO */
+
+        document.getElementById("resultName")
+            .textContent = name;
+
+        document.getElementById("resultRoll")
+            .textContent = roll;
+
+        document.getElementById("resultEmail")
+            .textContent = email;
+
+
+        /* SHOW SCORE */
+
+        document.getElementById("finalScore")
+            .textContent = score;
+
+        document.getElementById("totalScore")
+            .textContent = totalQuestions;
+
+        document.getElementById("finalPercentage")
+            .textContent = percentage + "%";
+
+
+        /* SHOW ANSWER REVIEW */
+
+        document.getElementById("answerReview")
+            .innerHTML = reviewHTML;
+
+
+        /* =================================================
+           PRACTICAL ANSWERS
+        ================================================= */
+
+        const practicalQuestions = [
+
+            {
+                number: 37,
+                text:
+                    'Write a Python program to print "Hello World" and numbers from 1 to 10.',
+                field: "p1"
+            },
+
+            {
+                number: 38,
+                text:
+                    "Write a program to check whether a person is eligible to vote.",
+                field: "p2"
+            },
+
+            {
+                number: 39,
+                text:
+                    "Write a program to demonstrate list operations append(), insert(), remove(), pop() and sort().",
+                field: "p3"
+            },
+
+            {
+                number: 40,
+                text:
+                    "Write a function to calculate Simple Interest.",
+                field: "p4"
+            },
+
+            {
+                number: 41,
+                text:
+                    "Write a program to find the ASCII value of a character using ord().",
+                field: "p5"
+            },
+
+            {
+                number: 42,
+                text:
+                    "Write a program to write and read data from a text file.",
+                field: "p6"
+            }
+
+        ];
+
+
+        let practicalHTML = "";
+
+
+        practicalQuestions.forEach(function(item) {
+
+            const textarea =
+                document.querySelector(
+                    `textarea[name="${item.field}"]`
+                );
+
+
+            const answer =
+                textarea.value.trim();
+
+
+            practicalHTML += `
+
+                <div class="practical-result">
+
+                    <h3>
+                        ${item.number}. ${item.text}
+                    </h3>
+
+                    <div class="code-answer">
+
+                        ${answer
+                            ? escapeHTML(answer)
+                            : "No answer submitted."}
+
+                    </div>
+
+                </div>
+
+            `;
+
+        });
+
+
+        document.getElementById("practicalReview")
+            .innerHTML = practicalHTML;
+
+
+        /* =================================================
+           HIDE ASSESSMENT
+        ================================================= */
+
+        document.getElementById("assessmentPage")
+            .style.display = "none";
+
+
+        /* SHOW RESULT */
+
+        document.getElementById("resultPage")
+            .style.display = "block";
+
+
+        /* SCROLL TOP */
+
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
+
+    });
+
+
+    /* =====================================================
+       SECURITY FOR PRACTICAL CODE DISPLAY
+    ===================================================== */
+
+    function escapeHTML(text) {
+
+        return text
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+
+    }
+
+</script>
+
+</body>
+</html>
+```
