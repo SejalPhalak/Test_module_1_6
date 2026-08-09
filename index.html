@@ -13,7 +13,7 @@
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <script type="text/javascript">
         (function() {
-            // Your exact Public Key
+            // Your API Public Key
             emailjs.init("bVkUfQLi_AQHW5jEI"); 
         })();
     </script>
@@ -420,7 +420,7 @@
         const totalQuestions = Object.keys(answers).length;
         let pdfHTMLContent = ""; 
 
-        // Escapes text safely to avoid HTML injection
+        // Escapes text safely to avoid HTML injection errors
         const esc = (str) => {
             if (!str) return "";
             let div = document.createElement('div');
@@ -450,96 +450,98 @@
             submitBtn.innerText = "Submitting & Sending Email...";
             submitBtn.disabled = true;
 
-            // CALCULATE SCORE & COLLECT ANSWERS
             let score = 0;
             
-            // ==========================================
-            // FULL PDF HTML GENERATION (Questions + Answers)
-            // ==========================================
+            // Generate Email Plain Text Content
+            let emailText = "==========================\nMCQ SUMMARY\n==========================\n\n";
+
+            // Generate PDF HTML Content
             pdfHTMLContent = `
-                <div style="padding: 20px; font-family: Arial, sans-serif; color: #333;">
+                <div style="padding: 20px; font-family: Arial, sans-serif; color: #333; background: #fff;">
                     <h1 style="color: #4f46e5; text-align: center; border-bottom: 2px solid #e5e7eb; padding-bottom: 10px;">Python Assessment Result</h1>
                     
-                    <div style="margin-top: 15px; font-size: 14px;">
-                        <p><strong>Name:</strong> ${esc(studentName)}</p>
-                        <p><strong>Roll Number:</strong> ${esc(rollNumber)}</p>
-                        <p><strong>Email:</strong> ${esc(email)}</p>
-                        <p><strong>Date:</strong> ${new Date().toLocaleString()}</p>
+                    <div style="margin-top: 15px; font-size: 14px; background: #f9fafb; padding: 10px; border-radius: 8px;">
+                        <p><strong>Name:</strong> ${esc(studentName)} &nbsp; | &nbsp; <strong>Roll Number:</strong> ${esc(rollNumber)}</p>
+                        <p><strong>Email:</strong> ${esc(email)} &nbsp; | &nbsp; <strong>Date:</strong> ${new Date().toLocaleString()}</p>
                     </div>
                     
                     <h2 style="color: #374151; margin-top: 30px; border-bottom: 1px solid #e5e7eb; padding-bottom: 5px;">MCQ Answers</h2>
             `;
 
+            // Process all 36 MCQs
             for (let i = 1; i <= totalQuestions; i++) {
                 let qKey = "q" + i;
                 
-                // Find Question Text
+                // Get Question text
                 let qDiv = document.querySelector(`input[name="${qKey}"]`).closest('.question');
                 let qText = qDiv.querySelector('h3').innerText;
                 
-                // Find Selected Answer
+                // Get Student's selected answer
                 let selectedInput = document.querySelector(`input[name="${qKey}"]:checked`);
-                let studentAnsLetter = selectedInput ? selectedInput.value : null;
-                let studentAnsText = "Not Answered";
+                let studentAnsLetter = selectedInput ? selectedInput.value : "Not Answered";
+                let studentAnsFull = "Not Answered";
                 
-                if (studentAnsLetter) {
-                    studentAnsText = qDiv.querySelector(`input[value="${studentAnsLetter}"]`).parentElement.innerText.trim();
+                if (selectedInput) {
+                    studentAnsFull = studentAnsLetter + ") " + selectedInput.parentElement.innerText.trim();
                 }
                 
-                // Find Correct Answer
+                // Get Correct answer
                 let correctAnsLetter = answers[qKey];
-                let correctAnsText = qDiv.querySelector(`input[value="${correctAnsLetter}"]`).parentElement.innerText.trim();
+                let correctAnsFull = correctAnsLetter + ") " + qDiv.querySelector(`input[value="${correctAnsLetter}"]`).parentElement.innerText.trim();
                 
                 // Check if correct
                 let isCorrect = (studentAnsLetter === correctAnsLetter);
                 if (isCorrect) score++;
 
-                let statusColor = isCorrect ? "#10b981" : "#ef4444"; 
-                let statusIcon = isCorrect ? "✅ Correct" : "❌ Wrong";
+                let bgColor = isCorrect ? "#dcfce7" : "#fee2e2"; 
+                let textColor = isCorrect ? "#166534" : "#991b1b";
+                let icon = isCorrect ? "✅" : "❌";
                 
+                // Append to PDF HTML
                 pdfHTMLContent += `
-                <div style="margin-bottom: 15px; padding: 15px; border: 1px solid #e5e7eb; border-radius: 8px; background: #fafaff; page-break-inside: avoid;">
-                    <p style="margin: 0 0 10px 0; font-weight: bold; font-size: 14px;">${esc(qText)}</p>
-                    <p style="margin: 5px 0; color: ${statusColor}; font-size: 13px;"><strong>Your Answer:</strong> ${esc(studentAnsText)} (${statusIcon})</p>
-                    ${!isCorrect ? `<p style="margin: 5px 0; color: #374151; font-size: 13px;"><strong>Correct Answer:</strong> ${esc(correctAnsText)}</p>` : ''}
+                <div style="margin-bottom: 15px; padding: 15px; border-radius: 8px; background: ${bgColor}; border: 1px solid #d1d5db; page-break-inside: avoid;">
+                    <p style="margin: 0 0 10px 0; font-weight: bold; font-size: 14px; color: #1f2937;">${esc(qText)}</p>
+                    <p style="margin: 5px 0; font-size: 13px; color: ${textColor};"><strong>Your Answer:</strong> ${esc(studentAnsFull)} ${icon}</p>
+                    ${!isCorrect ? `<p style="margin: 5px 0; font-size: 13px; color: #166534;"><strong>Correct Answer:</strong> ${esc(correctAnsFull)}</p>` : ''}
                 </div>
                 `;
+
+                // Append to Email Text
+                emailText += `Q${i}: Your Ans: ${studentAnsLetter} | Correct: ${correctAnsLetter} ${icon}\n`;
             }
 
             const percentage = Math.round((score / totalQuestions) * 100);
 
-            // Add Total Score
+            // Add the dynamic score to PDF
             pdfHTMLContent = pdfHTMLContent.replace(
                 '<h2 style="color: #374151; margin-top: 30px; border-bottom: 1px solid #e5e7eb; padding-bottom: 5px;">MCQ Answers</h2>',
-                `<div style="margin-top: 15px; background: #f3f4ff; padding: 15px; border-radius: 8px; text-align:center;">
-                    <h2 style="color: #4f46e5; margin: 0;">Total Score: ${score} / ${totalQuestions} (${percentage}%)</h2>
+                `<div style="margin-top: 20px; background: #e0e7ff; padding: 15px; border-radius: 8px; text-align:center;">
+                    <h2 style="color: #4338ca; margin: 0;">Total Score: ${score} / ${totalQuestions} (${percentage}%)</h2>
                  </div>
                  <h2 style="color: #374151; margin-top: 30px; border-bottom: 1px solid #e5e7eb; padding-bottom: 5px;">MCQ Answers</h2>`
             );
 
-            // Practical Questions
+            // Add Practical Section
             pdfHTMLContent += `
                 <h2 style="color: #374151; margin-top: 30px; border-bottom: 1px solid #e5e7eb; padding-bottom: 5px;">Practical Code Submissions</h2>
             `;
-
-            const p1 = document.querySelector('textarea[name="p1"]').value;
-            const p2 = document.querySelector('textarea[name="p2"]').value;
-            const p3 = document.querySelector('textarea[name="p3"]').value;
-            const p4 = document.querySelector('textarea[name="p4"]').value;
-            const p5 = document.querySelector('textarea[name="p5"]').value;
-            const p6 = document.querySelector('textarea[name="p6"]').value;
+            emailText += `\n==========================\nPRACTICAL SUBMISSIONS\n==========================\n\n`;
 
             let practicals = document.querySelectorAll('.practical-question');
-            practicals.forEach((p, index) => {
+            practicals.forEach((p) => {
                 let pText = p.querySelector('h3').innerText;
-                let pCode = p.querySelector('textarea').value;
+                let pCode = p.querySelector('textarea').value || "No code submitted.";
                 
+                // Append to PDF HTML
                 pdfHTMLContent += `
-                <div style="margin-bottom: 15px; padding: 15px; border: 1px solid #e5e7eb; border-radius: 8px; background: #ffffff; page-break-inside: avoid;">
-                    <p style="margin: 0 0 10px 0; font-weight: bold; font-size: 14px;">${esc(pText)}</p>
-                    <pre style="background: #f4f7fb; padding: 15px; border-radius: 5px; border: 1px solid #d1d5db; white-space: pre-wrap; font-family: monospace; font-size: 13px; margin: 0;">${esc(pCode) || "No code submitted."}</pre>
+                <div style="margin-bottom: 20px; padding: 15px; border: 1px solid #d1d5db; border-radius: 8px; background: #ffffff; page-break-inside: avoid;">
+                    <p style="margin: 0 0 10px 0; font-weight: bold; font-size: 14px; color: #1f2937;">${esc(pText)}</p>
+                    <pre style="background: #1f2937; color: #f3f4ff; padding: 15px; border-radius: 5px; white-space: pre-wrap; font-family: monospace; font-size: 13px; margin: 0;">${esc(pCode)}</pre>
                 </div>
                 `;
+
+                // Append to Email Text
+                emailText += `${pText}\nCode:\n${pCode}\n\n`;
             });
 
             pdfHTMLContent += `</div>`;
@@ -557,14 +559,7 @@
                 score: score,
                 total: totalQuestions,
                 percentage: percentage,
-                practical_answers: `
-Q37: ${p1 || "No Answer"}
-Q38: ${p2 || "No Answer"}
-Q39: ${p3 || "No Answer"}
-Q40: ${p4 || "No Answer"}
-Q41: ${p5 || "No Answer"}
-Q42: ${p6 || "No Answer"}
-                `
+                practical_answers: emailText  // Assigning the completely formatted string here
             };
 
             // ==========================================
@@ -599,13 +594,11 @@ Q42: ${p6 || "No Answer"}
 
         // ==========================================
         // DOWNLOAD PDF BUTTON LOGIC 
+        // Direct string rendering fixes layout clipping
         // ==========================================
         document.getElementById("downloadPdfBtn").addEventListener("click", function() {
             const rollNumber = document.getElementById("rollNumber").value.trim() || "Student";
             const studentName = document.getElementById("studentName").value.trim() || "Name";
-            
-            const element = document.createElement("div");
-            element.innerHTML = pdfHTMLContent;
 
             const opt = {
                 margin:       10, 
@@ -619,7 +612,8 @@ Q42: ${p6 || "No Answer"}
             const originalText = btn.innerText;
             btn.innerText = "Generating PDF...";
             
-            html2pdf().set(opt).from(element).toPdf().get('pdf').then(function (pdf) {
+            // Directly passing HTML string instead of DOM element to avoid UI rendering cut-offs
+            html2pdf().set(opt).from(pdfHTMLContent).toPdf().get('pdf').then(function (pdf) {
                 btn.innerText = originalText;
             }).save();
         });
