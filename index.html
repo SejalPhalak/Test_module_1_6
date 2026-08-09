@@ -13,7 +13,7 @@
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <script type="text/javascript">
         (function() {
-            // Initializing EmailJS with your exact Public Key
+            // Your exact Public Key
             emailjs.init("bVkUfQLi_AQHW5jEI"); 
         })();
     </script>
@@ -420,6 +420,14 @@
         const totalQuestions = Object.keys(answers).length;
         let pdfHTMLContent = ""; 
 
+        // Escapes text safely to avoid HTML injection
+        const esc = (str) => {
+            if (!str) return "";
+            let div = document.createElement('div');
+            div.appendChild(document.createTextNode(str));
+            return div.innerHTML;
+        };
+
         // FORM SUBMISSION
         const form = document.getElementById("quizForm");
 
@@ -444,45 +452,75 @@
 
             // CALCULATE SCORE & COLLECT ANSWERS
             let score = 0;
-            let answered = 0;
-
-            // MCQ Answers HTML structure for PDF
-            let mcqDetailsHTML = "<h3 style='color: #374151; border-bottom: 1px solid #e5e7eb; padding-bottom: 5px; margin-top:20px;'>MCQ Answers</h3>";
-            mcqDetailsHTML += "<table style='width: 100%; border-collapse: collapse; font-size: 14px;'>";
-            mcqDetailsHTML += "<tr style='background: #e5e7eb; text-align: left;'><th style='padding:8px; border:1px solid #d1d5db;'>Q.No</th><th style='padding:8px; border:1px solid #d1d5db;'>Student Ans</th><th style='padding:8px; border:1px solid #d1d5db;'>Correct Ans</th><th style='padding:8px; border:1px solid #d1d5db;'>Status</th></tr>";
+            
+            // ==========================================
+            // FULL PDF HTML GENERATION (Questions + Answers)
+            // ==========================================
+            pdfHTMLContent = `
+                <div style="padding: 20px; font-family: Arial, sans-serif; color: #333;">
+                    <h1 style="color: #4f46e5; text-align: center; border-bottom: 2px solid #e5e7eb; padding-bottom: 10px;">Python Assessment Result</h1>
+                    
+                    <div style="margin-top: 15px; font-size: 14px;">
+                        <p><strong>Name:</strong> ${esc(studentName)}</p>
+                        <p><strong>Roll Number:</strong> ${esc(rollNumber)}</p>
+                        <p><strong>Email:</strong> ${esc(email)}</p>
+                        <p><strong>Date:</strong> ${new Date().toLocaleString()}</p>
+                    </div>
+                    
+                    <h2 style="color: #374151; margin-top: 30px; border-bottom: 1px solid #e5e7eb; padding-bottom: 5px;">MCQ Answers</h2>
+            `;
 
             for (let i = 1; i <= totalQuestions; i++) {
                 let qKey = "q" + i;
-                const selected = document.querySelector(`input[name="${qKey}"]:checked`);
-                let studentAns = selected ? selected.value : "Not Answered";
-                let correctAns = answers[qKey];
-                let isCorrect = studentAns === correctAns;
                 
-                if (isCorrect) {
-                    score++;
+                // Find Question Text
+                let qDiv = document.querySelector(`input[name="${qKey}"]`).closest('.question');
+                let qText = qDiv.querySelector('h3').innerText;
+                
+                // Find Selected Answer
+                let selectedInput = document.querySelector(`input[name="${qKey}"]:checked`);
+                let studentAnsLetter = selectedInput ? selectedInput.value : null;
+                let studentAnsText = "Not Answered";
+                
+                if (studentAnsLetter) {
+                    studentAnsText = qDiv.querySelector(`input[value="${studentAnsLetter}"]`).parentElement.innerText.trim();
                 }
+                
+                // Find Correct Answer
+                let correctAnsLetter = answers[qKey];
+                let correctAnsText = qDiv.querySelector(`input[value="${correctAnsLetter}"]`).parentElement.innerText.trim();
+                
+                // Check if correct
+                let isCorrect = (studentAnsLetter === correctAnsLetter);
+                if (isCorrect) score++;
 
-                // Add row for each MCQ
-                let rowColor = isCorrect ? "#dcfce7" : "#fee2e2"; 
+                let statusColor = isCorrect ? "#10b981" : "#ef4444"; 
                 let statusIcon = isCorrect ? "✅ Correct" : "❌ Wrong";
                 
-                mcqDetailsHTML += `<tr style='background: ${rowColor};'>
-                    <td style='padding:8px; border:1px solid #d1d5db; text-align:center;'><b>${i}</b></td>
-                    <td style='padding:8px; border:1px solid #d1d5db; text-align:center;'>${studentAns}</td>
-                    <td style='padding:8px; border:1px solid #d1d5db; text-align:center;'>${correctAns}</td>
-                    <td style='padding:8px; border:1px solid #d1d5db;'>${statusIcon}</td>
-                </tr>`;
+                pdfHTMLContent += `
+                <div style="margin-bottom: 15px; padding: 15px; border: 1px solid #e5e7eb; border-radius: 8px; background: #fafaff; page-break-inside: avoid;">
+                    <p style="margin: 0 0 10px 0; font-weight: bold; font-size: 14px;">${esc(qText)}</p>
+                    <p style="margin: 5px 0; color: ${statusColor}; font-size: 13px;"><strong>Your Answer:</strong> ${esc(studentAnsText)} (${statusIcon})</p>
+                    ${!isCorrect ? `<p style="margin: 5px 0; color: #374151; font-size: 13px;"><strong>Correct Answer:</strong> ${esc(correctAnsText)}</p>` : ''}
+                </div>
+                `;
             }
-            mcqDetailsHTML += "</table>";
 
             const percentage = Math.round((score / totalQuestions) * 100);
 
-            // Collect Practical Answers safely
-            const esc = (str) => {
-                let div = document.createElement('div');
-                div.appendChild(document.createTextNode(str));
-                return div.innerHTML;
-            };
+            // Add Total Score
+            pdfHTMLContent = pdfHTMLContent.replace(
+                '<h2 style="color: #374151; margin-top: 30px; border-bottom: 1px solid #e5e7eb; padding-bottom: 5px;">MCQ Answers</h2>',
+                `<div style="margin-top: 15px; background: #f3f4ff; padding: 15px; border-radius: 8px; text-align:center;">
+                    <h2 style="color: #4f46e5; margin: 0;">Total Score: ${score} / ${totalQuestions} (${percentage}%)</h2>
+                 </div>
+                 <h2 style="color: #374151; margin-top: 30px; border-bottom: 1px solid #e5e7eb; padding-bottom: 5px;">MCQ Answers</h2>`
+            );
+
+            // Practical Questions
+            pdfHTMLContent += `
+                <h2 style="color: #374151; margin-top: 30px; border-bottom: 1px solid #e5e7eb; padding-bottom: 5px;">Practical Code Submissions</h2>
+            `;
 
             const p1 = document.querySelector('textarea[name="p1"]').value;
             const p2 = document.querySelector('textarea[name="p2"]').value;
@@ -491,34 +529,21 @@
             const p5 = document.querySelector('textarea[name="p5"]').value;
             const p6 = document.querySelector('textarea[name="p6"]').value;
 
-            // PREPARE HTML CONTENT FOR PDF
-            pdfHTMLContent = `
-                <div style="padding: 30px; font-family: Arial, sans-serif; color: #333;">
-                    <h2 style="color: #4f46e5; text-align: center; border-bottom: 2px solid #e5e7eb; padding-bottom: 10px;">Python Assessment Result</h2>
-                    
-                    <div style="margin-top: 20px;">
-                        <p><strong>Name:</strong> ${esc(studentName)} &nbsp; | &nbsp; <strong>Roll Number:</strong> ${esc(rollNumber)}</p>
-                        <p><strong>Email:</strong> ${esc(email)} &nbsp; | &nbsp; <strong>Date:</strong> ${new Date().toLocaleString()}</p>
-                    </div>
-                    
-                    <div style="margin-top: 20px; background: #f3f4ff; padding: 15px; border-radius: 8px; text-align:center;">
-                        <h2 style="color: #4f46e5; margin: 0;">Total Score: ${score} / ${totalQuestions} (${percentage}%)</h2>
-                    </div>
-                    
-                    <!-- MCQ Details Block Inserted Here -->
-                    ${mcqDetailsHTML}
-
-                    <div style="margin-top: 30px;">
-                        <h3 style="color: #374151; border-bottom: 1px solid #e5e7eb; padding-bottom: 5px;">Practical Code Submissions</h3>
-                        <div style="margin-top: 15px; font-size:13px;"><strong>Q37:</strong><pre style="background: #f4f7fb; padding: 10px; border: 1px solid #d1d5db; white-space: pre-wrap;">${esc(p1) || "No code submitted."}</pre></div>
-                        <div style="margin-top: 15px; font-size:13px;"><strong>Q38:</strong><pre style="background: #f4f7fb; padding: 10px; border: 1px solid #d1d5db; white-space: pre-wrap;">${esc(p2) || "No code submitted."}</pre></div>
-                        <div style="margin-top: 15px; font-size:13px;"><strong>Q39:</strong><pre style="background: #f4f7fb; padding: 10px; border: 1px solid #d1d5db; white-space: pre-wrap;">${esc(p3) || "No code submitted."}</pre></div>
-                        <div style="margin-top: 15px; font-size:13px;"><strong>Q40:</strong><pre style="background: #f4f7fb; padding: 10px; border: 1px solid #d1d5db; white-space: pre-wrap;">${esc(p4) || "No code submitted."}</pre></div>
-                        <div style="margin-top: 15px; font-size:13px;"><strong>Q41:</strong><pre style="background: #f4f7fb; padding: 10px; border: 1px solid #d1d5db; white-space: pre-wrap;">${esc(p5) || "No code submitted."}</pre></div>
-                        <div style="margin-top: 15px; font-size:13px;"><strong>Q42:</strong><pre style="background: #f4f7fb; padding: 10px; border: 1px solid #d1d5db; white-space: pre-wrap;">${esc(p6) || "No code submitted."}</pre></div>
-                    </div>
+            let practicals = document.querySelectorAll('.practical-question');
+            practicals.forEach((p, index) => {
+                let pText = p.querySelector('h3').innerText;
+                let pCode = p.querySelector('textarea').value;
+                
+                pdfHTMLContent += `
+                <div style="margin-bottom: 15px; padding: 15px; border: 1px solid #e5e7eb; border-radius: 8px; background: #ffffff; page-break-inside: avoid;">
+                    <p style="margin: 0 0 10px 0; font-weight: bold; font-size: 14px;">${esc(pText)}</p>
+                    <pre style="background: #f4f7fb; padding: 15px; border-radius: 5px; border: 1px solid #d1d5db; white-space: pre-wrap; font-family: monospace; font-size: 13px; margin: 0;">${esc(pCode) || "No code submitted."}</pre>
                 </div>
-            `;
+                `;
+            });
+
+            pdfHTMLContent += `</div>`;
+
 
             // ==========================================
             // PREPARE EMAIL DATA 
@@ -545,7 +570,7 @@ Q42: ${p6 || "No Answer"}
             // ==========================================
             // SEND EMAIL VIA EMAILJS
             // ==========================================
-            emailjs.send("service_s3dzh04", "927w7la", templateParams)
+            emailjs.send("service_s3dzh04", "template_zm2onhc", templateParams)
                 .then(function(response) {
                     document.getElementById("studentResult").innerHTML =
                         `Well done, <strong>${studentName}</strong>!<br>Roll Number: ${rollNumber}<br><br><span style="color: #10b981; font-weight: bold;">✅ Answers successfully sent to instructor's email.</span>`;
@@ -587,8 +612,7 @@ Q42: ${p6 || "No Answer"}
                 filename:     `${rollNumber}_${studentName}_Result.pdf`,
                 image:        { type: 'jpeg', quality: 0.98 },
                 html2canvas:  { scale: 2, useCORS: true }, 
-                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' },
-                pagebreak:    { mode: ['avoid-all', 'css', 'legacy'] }
+                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
             };
 
             const btn = document.getElementById("downloadPdfBtn");
