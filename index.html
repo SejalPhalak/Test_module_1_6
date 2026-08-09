@@ -6,16 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Python Programming Assessment</title>
 
-    <!-- PDF Generate karnyasaathi Library -->
+    <!-- PDF Generation Library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
     <!-- EmailJS Library -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <script type="text/javascript">
         (function() {
-            // ==========================================
-            // MAHATVACHE: Ithe tujhi 'Public Key' tak 
-            // ==========================================
+            // Initializing EmailJS with your exact Public Key
             emailjs.init("bVkUfQLi_AQHW5jEI"); 
         })();
     </script>
@@ -448,15 +446,34 @@
             let score = 0;
             let answered = 0;
 
-            for (let question in answers) {
-                const selected = document.querySelector(`input[name="${question}"]:checked`);
-                if (selected) {
-                    answered++;
-                    if (selected.value === answers[question]) {
-                        score++;
-                    }
+            // MCQ Answers HTML structure for PDF
+            let mcqDetailsHTML = "<h3 style='color: #374151; border-bottom: 1px solid #e5e7eb; padding-bottom: 5px; margin-top:20px;'>MCQ Answers</h3>";
+            mcqDetailsHTML += "<table style='width: 100%; border-collapse: collapse; font-size: 14px;'>";
+            mcqDetailsHTML += "<tr style='background: #e5e7eb; text-align: left;'><th style='padding:8px; border:1px solid #d1d5db;'>Q.No</th><th style='padding:8px; border:1px solid #d1d5db;'>Student Ans</th><th style='padding:8px; border:1px solid #d1d5db;'>Correct Ans</th><th style='padding:8px; border:1px solid #d1d5db;'>Status</th></tr>";
+
+            for (let i = 1; i <= totalQuestions; i++) {
+                let qKey = "q" + i;
+                const selected = document.querySelector(`input[name="${qKey}"]:checked`);
+                let studentAns = selected ? selected.value : "Not Answered";
+                let correctAns = answers[qKey];
+                let isCorrect = studentAns === correctAns;
+                
+                if (isCorrect) {
+                    score++;
                 }
+
+                // Add row for each MCQ
+                let rowColor = isCorrect ? "#dcfce7" : "#fee2e2"; 
+                let statusIcon = isCorrect ? "✅ Correct" : "❌ Wrong";
+                
+                mcqDetailsHTML += `<tr style='background: ${rowColor};'>
+                    <td style='padding:8px; border:1px solid #d1d5db; text-align:center;'><b>${i}</b></td>
+                    <td style='padding:8px; border:1px solid #d1d5db; text-align:center;'>${studentAns}</td>
+                    <td style='padding:8px; border:1px solid #d1d5db; text-align:center;'>${correctAns}</td>
+                    <td style='padding:8px; border:1px solid #d1d5db;'>${statusIcon}</td>
+                </tr>`;
             }
+            mcqDetailsHTML += "</table>";
 
             const percentage = Math.round((score / totalQuestions) * 100);
 
@@ -476,26 +493,29 @@
 
             // PREPARE HTML CONTENT FOR PDF
             pdfHTMLContent = `
-                <div style="padding: 40px; font-family: Arial, sans-serif; color: #333;">
-                    <h1 style="color: #4f46e5; text-align: center; border-bottom: 2px solid #e5e7eb; padding-bottom: 15px;">Python Assessment Result</h1>
+                <div style="padding: 30px; font-family: Arial, sans-serif; color: #333;">
+                    <h2 style="color: #4f46e5; text-align: center; border-bottom: 2px solid #e5e7eb; padding-bottom: 10px;">Python Assessment Result</h2>
+                    
                     <div style="margin-top: 20px;">
-                        <h2 style="color: #374151;">Student Details</h2>
-                        <p><strong>Name:</strong> ${esc(studentName)}</p>
-                        <p><strong>Roll Number:</strong> ${esc(rollNumber)}</p>
-                        <p><strong>Email:</strong> ${esc(email)}</p>
-                        <p><strong>Date:</strong> ${new Date().toLocaleString()}</p>
+                        <p><strong>Name:</strong> ${esc(studentName)} &nbsp; | &nbsp; <strong>Roll Number:</strong> ${esc(rollNumber)}</p>
+                        <p><strong>Email:</strong> ${esc(email)} &nbsp; | &nbsp; <strong>Date:</strong> ${new Date().toLocaleString()}</p>
                     </div>
-                    <div style="margin-top: 30px; background: #f3f4ff; padding: 20px; border-radius: 8px;">
-                        <h2 style="color: #4f46e5; margin: 0;">MCQ Score: ${score} / ${totalQuestions} (${percentage}%)</h2>
+                    
+                    <div style="margin-top: 20px; background: #f3f4ff; padding: 15px; border-radius: 8px; text-align:center;">
+                        <h2 style="color: #4f46e5; margin: 0;">Total Score: ${score} / ${totalQuestions} (${percentage}%)</h2>
                     </div>
+                    
+                    <!-- MCQ Details Block Inserted Here -->
+                    ${mcqDetailsHTML}
+
                     <div style="margin-top: 30px;">
-                        <h2 style="color: #374151; border-bottom: 1px solid #e5e7eb; padding-bottom: 10px;">Practical Code Submissions</h2>
-                        <div style="margin-top: 15px;"><strong>Q37:</strong><pre style="background: #f4f7fb; padding: 15px; border-radius: 5px; border: 1px solid #d1d5db; white-space: pre-wrap;">${esc(p1) || "No code submitted."}</pre></div>
-                        <div style="margin-top: 15px;"><strong>Q38:</strong><pre style="background: #f4f7fb; padding: 15px; border-radius: 5px; border: 1px solid #d1d5db; white-space: pre-wrap;">${esc(p2) || "No code submitted."}</pre></div>
-                        <div style="margin-top: 15px;"><strong>Q39:</strong><pre style="background: #f4f7fb; padding: 15px; border-radius: 5px; border: 1px solid #d1d5db; white-space: pre-wrap;">${esc(p3) || "No code submitted."}</pre></div>
-                        <div style="margin-top: 15px;"><strong>Q40:</strong><pre style="background: #f4f7fb; padding: 15px; border-radius: 5px; border: 1px solid #d1d5db; white-space: pre-wrap;">${esc(p4) || "No code submitted."}</pre></div>
-                        <div style="margin-top: 15px;"><strong>Q41:</strong><pre style="background: #f4f7fb; padding: 15px; border-radius: 5px; border: 1px solid #d1d5db; white-space: pre-wrap;">${esc(p5) || "No code submitted."}</pre></div>
-                        <div style="margin-top: 15px;"><strong>Q42:</strong><pre style="background: #f4f7fb; padding: 15px; border-radius: 5px; border: 1px solid #d1d5db; white-space: pre-wrap;">${esc(p6) || "No code submitted."}</pre></div>
+                        <h3 style="color: #374151; border-bottom: 1px solid #e5e7eb; padding-bottom: 5px;">Practical Code Submissions</h3>
+                        <div style="margin-top: 15px; font-size:13px;"><strong>Q37:</strong><pre style="background: #f4f7fb; padding: 10px; border: 1px solid #d1d5db; white-space: pre-wrap;">${esc(p1) || "No code submitted."}</pre></div>
+                        <div style="margin-top: 15px; font-size:13px;"><strong>Q38:</strong><pre style="background: #f4f7fb; padding: 10px; border: 1px solid #d1d5db; white-space: pre-wrap;">${esc(p2) || "No code submitted."}</pre></div>
+                        <div style="margin-top: 15px; font-size:13px;"><strong>Q39:</strong><pre style="background: #f4f7fb; padding: 10px; border: 1px solid #d1d5db; white-space: pre-wrap;">${esc(p3) || "No code submitted."}</pre></div>
+                        <div style="margin-top: 15px; font-size:13px;"><strong>Q40:</strong><pre style="background: #f4f7fb; padding: 10px; border: 1px solid #d1d5db; white-space: pre-wrap;">${esc(p4) || "No code submitted."}</pre></div>
+                        <div style="margin-top: 15px; font-size:13px;"><strong>Q41:</strong><pre style="background: #f4f7fb; padding: 10px; border: 1px solid #d1d5db; white-space: pre-wrap;">${esc(p5) || "No code submitted."}</pre></div>
+                        <div style="margin-top: 15px; font-size:13px;"><strong>Q42:</strong><pre style="background: #f4f7fb; padding: 10px; border: 1px solid #d1d5db; white-space: pre-wrap;">${esc(p6) || "No code submitted."}</pre></div>
                     </div>
                 </div>
             `;
@@ -513,67 +533,47 @@
                 total: totalQuestions,
                 percentage: percentage,
                 practical_answers: `
-Q37:
-${p1 || "No Answer"}
-
-Q38:
-${p2 || "No Answer"}
-
-Q39:
-${p3 || "No Answer"}
-
-Q40:
-${p4 || "No Answer"}
-
-Q41:
-${p5 || "No Answer"}
-
-Q42:
-${p6 || "No Answer"}
+Q37: ${p1 || "No Answer"}
+Q38: ${p2 || "No Answer"}
+Q39: ${p3 || "No Answer"}
+Q40: ${p4 || "No Answer"}
+Q41: ${p5 || "No Answer"}
+Q42: ${p6 || "No Answer"}
                 `
             };
 
             // ==========================================
             // SEND EMAIL VIA EMAILJS
-            // MAHATVACHE: "TUJHA_SERVICE_ID_ITHE_TAK" chya jagi tujha Service ID tak
             // ==========================================
             emailjs.send("service_s3dzh04", "927w7la", templateParams)
                 .then(function(response) {
-                    console.log("Email sent successfully!", response.status, response.text);
-                    
                     document.getElementById("studentResult").innerHTML =
                         `Well done, <strong>${studentName}</strong>!<br>Roll Number: ${rollNumber}<br><br><span style="color: #10b981; font-weight: bold;">✅ Answers successfully sent to instructor's email.</span>`;
-                    
                     showResults(score, percentage);
-                    
                 }, function(error) {
-                    console.log("EmailJS Error:", error);
-                    alert("Network error mule email gela nahi. Krupaya PDF download karun instructor la submit kara.");
-                    
+                    console.error("EmailJS Error:", error);
+                    alert("Network error or API key issue. Please download the PDF and submit it to your instructor.");
                     document.getElementById("studentResult").innerHTML =
                         `Well done, <strong>${studentName}</strong>!<br>Roll Number: ${rollNumber}<br><br><span style="color: #ef4444; font-weight: bold;">❌ Could not send email. Please download PDF.</span>`;
                     
+                    submitBtn.innerText = "Submit Assessment";
+                    submitBtn.disabled = false;
                     showResults(score, percentage);
                 });
         });
 
-        // Function to show results section
         function showResults(score, percentage) {
             document.getElementById("score").textContent = score;
-            document.getElementById("percentage").textContent = `MCQ Score: ${percentage}%`;
-
-            // Hide form
+            document.getElementById("percentage").textContent = `Total Score: ${percentage}%`;
             form.style.display = "none";
             document.querySelector(".progress-box").style.display = "none";
-
-            // Show result card
             const result = document.getElementById("result");
             result.style.display = "block";
             window.scrollTo({ top: 0, behavior: "smooth" });
         }
 
         // ==========================================
-        // DOWNLOAD PDF BUTTON LOGIC (Updated for strict PDF download)
+        // DOWNLOAD PDF BUTTON LOGIC 
         // ==========================================
         document.getElementById("downloadPdfBtn").addEventListener("click", function() {
             const rollNumber = document.getElementById("rollNumber").value.trim() || "Student";
@@ -583,18 +583,18 @@ ${p6 || "No Answer"}
             element.innerHTML = pdfHTMLContent;
 
             const opt = {
-                margin:       10, // Margin added for PDF formatting
+                margin:       10, 
                 filename:     `${rollNumber}_${studentName}_Result.pdf`,
                 image:        { type: 'jpeg', quality: 0.98 },
                 html2canvas:  { scale: 2, useCORS: true }, 
-                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' } 
+                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' },
+                pagebreak:    { mode: ['avoid-all', 'css', 'legacy'] }
             };
 
             const btn = document.getElementById("downloadPdfBtn");
             const originalText = btn.innerText;
             btn.innerText = "Generating PDF...";
             
-            // Promise based method for strict PDF generation
             html2pdf().set(opt).from(element).toPdf().get('pdf').then(function (pdf) {
                 btn.innerText = originalText;
             }).save();
