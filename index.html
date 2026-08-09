@@ -9,288 +9,60 @@
     <!-- PDF Generate karnyasaathi Library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
+    <!-- EmailJS Library -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script type="text/javascript">
+        (function() {
+            // ==========================================
+            // MAHATVACHE: Ithe tujhi 'Public Key' tak 
+            // ==========================================
+            emailjs.init("bVkUfQLi_AQHW5jEI"); 
+        })();
+    </script>
+
     <style>
         /* ================= CSS ================= */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: Arial, Helvetica, sans-serif;
-            background: #f4f7fb;
-            color: #1f2937;
-            line-height: 1.6;
-        }
-
-        .container {
-            width: 90%;
-            max-width: 1000px;
-            margin: 30px auto;
-        }
-
-        /* HEADER */
-        .header {
-            background: linear-gradient(135deg, #4f46e5, #7c3aed);
-            color: white;
-            padding: 40px 30px;
-            border-radius: 18px;
-            text-align: center;
-            margin-bottom: 25px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
-        }
-
-        .header h1 {
-            font-size: 32px;
-            margin-bottom: 8px;
-        }
-
-        .header p {
-            opacity: 0.9;
-        }
-
-        .info {
-            display: flex;
-            justify-content: center;
-            gap: 25px;
-            margin-top: 20px;
-            flex-wrap: wrap;
-        }
-
-        .info span {
-            background: rgba(255, 255, 255, 0.15);
-            padding: 8px 15px;
-            border-radius: 20px;
-        }
-
-        /* CARD */
-        .card {
-            background: white;
-            padding: 30px;
-            border-radius: 15px;
-            margin-bottom: 25px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.07);
-        }
-
-        .card h2 {
-            margin-bottom: 20px;
-        }
-
-        /* FORM */
-        .form-group {
-            margin-bottom: 18px;
-        }
-
-        .form-group label {
-            display: block;
-            font-weight: bold;
-            margin-bottom: 7px;
-        }
-
-        .form-group input {
-            width: 100%;
-            padding: 13px;
-            border: 1px solid #d1d5db;
-            border-radius: 8px;
-            font-size: 15px;
-        }
-
-        .form-group input:focus {
-            outline: none;
-            border-color: #4f46e5;
-        }
-
-        /* PROGRESS */
-        .progress-box {
-            background: white;
-            padding: 18px;
-            border-radius: 12px;
-            margin-bottom: 25px;
-            position: sticky;
-            top: 10px;
-            z-index: 10;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-        }
-
-        .progress-info {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 8px;
-            font-weight: bold;
-        }
-
-        .progress {
-            height: 10px;
-            background: #e5e7eb;
-            border-radius: 20px;
-            overflow: hidden;
-        }
-
-        #progressBar {
-            height: 100%;
-            width: 0%;
-            background: linear-gradient(90deg, #4f46e5, #7c3aed);
-            transition: 0.3s;
-        }
-
-        /* MODULE */
-        .module-title {
-            border-bottom: 1px solid #e5e7eb;
-            padding-bottom: 15px;
-            margin-bottom: 25px;
-        }
-
-        .module-title span {
-            color: #4f46e5;
-            font-size: 14px;
-            font-weight: bold;
-            text-transform: uppercase;
-        }
-
-        .module-title h2 {
-            margin-top: 4px;
-        }
-
-        /* QUESTIONS */
-        .question {
-            padding: 20px;
-            border: 1px solid #e5e7eb;
-            border-radius: 12px;
-            margin-bottom: 18px;
-            transition: 0.2s;
-        }
-
-        .question:hover {
-            border-color: #818cf8;
-            background: #fafaff;
-        }
-
-        .question h3 {
-            font-size: 16px;
-            margin-bottom: 15px;
-        }
-
-        .question label {
-            display: block;
-            padding: 11px 14px;
-            margin: 7px 0;
-            border: 1px solid #e5e7eb;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-
-        .question label:hover {
-            background: #f3f4ff;
-            border-color: #818cf8;
-        }
-
-        .question input {
-            margin-right: 10px;
-        }
-
-        /* PRACTICAL */
-        .practical-question {
-            margin-bottom: 25px;
-        }
-
-        .practical-question h3 {
-            font-size: 16px;
-            margin-bottom: 12px;
-        }
-
-        textarea {
-            width: 100%;
-            min-height: 180px;
-            padding: 15px;
-            border: 1px solid #d1d5db;
-            border-radius: 10px;
-            font-family: Consolas, monospace;
-            font-size: 14px;
-            resize: vertical;
-        }
-
-        textarea:focus {
-            outline: none;
-            border-color: #4f46e5;
-        }
-
-        /* SUBMIT */
-        .submit-box {
-            text-align: center;
-            margin: 30px 0;
-        }
-
-        .submit-box button,
-        .result-card button {
-            border: none;
-            background: linear-gradient(135deg, #4f46e5, #7c3aed);
-            color: white;
-            padding: 14px 35px;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.2s;
-            margin: 5px;
-        }
-
-        .submit-box button:hover,
-        .result-card button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(79, 70, 229, 0.3);
-        }
-
-        /* RESULT */
-        .result-card {
-            display: none;
-            background: white;
-            text-align: center;
-            padding: 45px 30px;
-            border-radius: 18px;
-            margin: 30px 0;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        }
-
-        .result-icon {
-            font-size: 50px;
-            margin-bottom: 15px;
-        }
-
-        .result-card h2 {
-            margin-bottom: 10px;
-        }
-
-        .score {
-            font-size: 55px;
-            font-weight: bold;
-            color: #4f46e5;
-            margin: 20px 0;
-        }
-
-        .score small {
-            font-size: 25px;
-            color: #6b7280;
-        }
-
-        #percentage {
-            font-size: 20px;
-            font-weight: bold;
-            margin-bottom: 25px;
-        }
-
-        /* RESPONSIVE */
-        @media (max-width: 768px) {
-            .container { width: 95%; margin: 15px auto; }
-            .header { padding: 30px 20px; }
-            .header h1 { font-size: 25px; }
-            .card { padding: 20px; }
-            .info { gap: 10px; }
-            .question { padding: 15px; }
-            .question h3 { font-size: 15px; }
-            .progress-box { top: 5px; }
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, Helvetica, sans-serif; background: #f4f7fb; color: #1f2937; line-height: 1.6; }
+        .container { width: 90%; max-width: 1000px; margin: 30px auto; }
+        .header { background: linear-gradient(135deg, #4f46e5, #7c3aed); color: white; padding: 40px 30px; border-radius: 18px; text-align: center; margin-bottom: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.12); }
+        .header h1 { font-size: 32px; margin-bottom: 8px; }
+        .header p { opacity: 0.9; }
+        .info { display: flex; justify-content: center; gap: 25px; margin-top: 20px; flex-wrap: wrap; }
+        .info span { background: rgba(255, 255, 255, 0.15); padding: 8px 15px; border-radius: 20px; }
+        .card { background: white; padding: 30px; border-radius: 15px; margin-bottom: 25px; box-shadow: 0 5px 20px rgba(0,0,0,0.07); }
+        .card h2 { margin-bottom: 20px; }
+        .form-group { margin-bottom: 18px; }
+        .form-group label { display: block; font-weight: bold; margin-bottom: 7px; }
+        .form-group input { width: 100%; padding: 13px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 15px; }
+        .form-group input:focus { outline: none; border-color: #4f46e5; }
+        .progress-box { background: white; padding: 18px; border-radius: 12px; margin-bottom: 25px; position: sticky; top: 10px; z-index: 10; box-shadow: 0 5px 15px rgba(0,0,0,0.08); }
+        .progress-info { display: flex; justify-content: space-between; margin-bottom: 8px; font-weight: bold; }
+        .progress { height: 10px; background: #e5e7eb; border-radius: 20px; overflow: hidden; }
+        #progressBar { height: 100%; width: 0%; background: linear-gradient(90deg, #4f46e5, #7c3aed); transition: 0.3s; }
+        .module-title { border-bottom: 1px solid #e5e7eb; padding-bottom: 15px; margin-bottom: 25px; }
+        .module-title span { color: #4f46e5; font-size: 14px; font-weight: bold; text-transform: uppercase; }
+        .module-title h2 { margin-top: 4px; }
+        .question { padding: 20px; border: 1px solid #e5e7eb; border-radius: 12px; margin-bottom: 18px; transition: 0.2s; }
+        .question:hover { border-color: #818cf8; background: #fafaff; }
+        .question h3 { font-size: 16px; margin-bottom: 15px; }
+        .question label { display: block; padding: 11px 14px; margin: 7px 0; border: 1px solid #e5e7eb; border-radius: 8px; cursor: pointer; transition: 0.2s; }
+        .question label:hover { background: #f3f4ff; border-color: #818cf8; }
+        .question input { margin-right: 10px; }
+        .practical-question { margin-bottom: 25px; }
+        .practical-question h3 { font-size: 16px; margin-bottom: 12px; }
+        textarea { width: 100%; min-height: 180px; padding: 15px; border: 1px solid #d1d5db; border-radius: 10px; font-family: Consolas, monospace; font-size: 14px; resize: vertical; }
+        textarea:focus { outline: none; border-color: #4f46e5; }
+        .submit-box { text-align: center; margin: 30px 0; }
+        .submit-box button, .result-card button { border: none; background: linear-gradient(135deg, #4f46e5, #7c3aed); color: white; padding: 14px 35px; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.2s; margin: 5px; }
+        .submit-box button:hover, .result-card button:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(79, 70, 229, 0.3); }
+        .result-card { display: none; background: white; text-align: center; padding: 45px 30px; border-radius: 18px; margin: 30px 0; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        .result-icon { font-size: 50px; margin-bottom: 15px; }
+        .result-card h2 { margin-bottom: 10px; }
+        .score { font-size: 55px; font-weight: bold; color: #4f46e5; margin: 20px 0; }
+        .score small { font-size: 25px; color: #6b7280; }
+        #percentage { font-size: 20px; font-weight: bold; margin-bottom: 25px; }
+        @media (max-width: 768px) { .container { width: 95%; margin: 15px auto; } .header { padding: 30px 20px; } .header h1 { font-size: 25px; } .card { padding: 20px; } .info { gap: 10px; } .question { padding: 15px; } .question h3 { font-size: 15px; } .progress-box { top: 5px; } }
     </style>
 </head>
 
@@ -340,47 +112,38 @@
         <form id="quizForm">
             <!-- ================= MODULE 1 ================= -->
             <section class="module card">
-                <div class="module-title">
-                    <span>Module 1</span>
-                    <h2>Introduction to Python</h2>
-                </div>
-                <div class="question">
-                    <h3>1. Who created Python?</h3>
+                <div class="module-title"><span>Module 1</span><h2>Introduction to Python</h2></div>
+                <div class="question"><h3>1. Who created Python?</h3>
                     <label><input type="radio" name="q1" value="A"> James Gosling</label>
                     <label><input type="radio" name="q1" value="B"> Guido van Rossum</label>
                     <label><input type="radio" name="q1" value="C"> Dennis Ritchie</label>
                     <label><input type="radio" name="q1" value="D"> Bjarne Stroustrup</label>
                 </div>
-                <div class="question">
-                    <h3>2. Python is a ______ programming language.</h3>
+                <div class="question"><h3>2. Python is a ______ programming language.</h3>
                     <label><input type="radio" name="q2" value="A"> Low-level</label>
                     <label><input type="radio" name="q2" value="B"> Machine-level</label>
                     <label><input type="radio" name="q2" value="C"> High-level</label>
                     <label><input type="radio" name="q2" value="D"> Assembly</label>
                 </div>
-                <div class="question">
-                    <h3>3. Which symbol is used for a comment?</h3>
+                <div class="question"><h3>3. Which symbol is used for a comment?</h3>
                     <label><input type="radio" name="q3" value="A"> //</label>
                     <label><input type="radio" name="q3" value="B"> /*</label>
                     <label><input type="radio" name="q3" value="C"> #</label>
                     <label><input type="radio" name="q3" value="D"> --</label>
                 </div>
-                <div class="question">
-                    <h3>4. Which function checks the datatype?</h3>
+                <div class="question"><h3>4. Which function checks the datatype?</h3>
                     <label><input type="radio" name="q4" value="A"> datatype()</label>
                     <label><input type="radio" name="q4" value="B"> type()</label>
                     <label><input type="radio" name="q4" value="C"> typeof()</label>
                     <label><input type="radio" name="q4" value="D"> checktype()</label>
                 </div>
-                <div class="question">
-                    <h3>5. Which is a valid Python variable?</h3>
+                <div class="question"><h3>5. Which is a valid Python variable?</h3>
                     <label><input type="radio" name="q5" value="A"> 2name</label>
                     <label><input type="radio" name="q5" value="B"> my-name</label>
                     <label><input type="radio" name="q5" value="C"> my_name</label>
                     <label><input type="radio" name="q5" value="D"> class</label>
                 </div>
-                <div class="question">
-                    <h3>6. Which module is used for command-line arguments?</h3>
+                <div class="question"><h3>6. Which module is used for command-line arguments?</h3>
                     <label><input type="radio" name="q6" value="A"> os</label>
                     <label><input type="radio" name="q6" value="B"> sys</label>
                     <label><input type="radio" name="q6" value="C"> math</label>
@@ -390,47 +153,38 @@
 
             <!-- ================= MODULE 2 ================= -->
             <section class="module card">
-                <div class="module-title">
-                    <span>Module 2</span>
-                    <h2>Control Statements & Strings</h2>
-                </div>
-                <div class="question">
-                    <h3>7. Which function splits a string?</h3>
+                <div class="module-title"><span>Module 2</span><h2>Control Statements & Strings</h2></div>
+                <div class="question"><h3>7. Which function splits a string?</h3>
                     <label><input type="radio" name="q7" value="A"> divide()</label>
                     <label><input type="radio" name="q7" value="B"> split()</label>
                     <label><input type="radio" name="q7" value="C"> separate()</label>
                     <label><input type="radio" name="q7" value="D"> break()</label>
                 </div>
-                <div class="question">
-                    <h3>8. Which function returns length?</h3>
+                <div class="question"><h3>8. Which function returns length?</h3>
                     <label><input type="radio" name="q8" value="A"> length()</label>
                     <label><input type="radio" name="q8" value="B"> size()</label>
                     <label><input type="radio" name="q8" value="C"> len()</label>
                     <label><input type="radio" name="q8" value="D"> count()</label>
                 </div>
-                <div class="question">
-                    <h3>9. Which operator checks membership?</h3>
+                <div class="question"><h3>9. Which operator checks membership?</h3>
                     <label><input type="radio" name="q9" value="A"> is</label>
                     <label><input type="radio" name="q9" value="B"> in</label>
                     <label><input type="radio" name="q9" value="C"> exists</label>
                     <label><input type="radio" name="q9" value="D"> has</label>
                 </div>
-                <div class="question">
-                    <h3>10. Which method converts text to uppercase?</h3>
+                <div class="question"><h3>10. Which method converts text to uppercase?</h3>
                     <label><input type="radio" name="q10" value="A"> upper()</label>
                     <label><input type="radio" name="q10" value="B"> uppercase()</label>
                     <label><input type="radio" name="q10" value="C"> capital()</label>
                     <label><input type="radio" name="q10" value="D"> title()</label>
                 </div>
-                <div class="question">
-                    <h3>11. Which statement is used for multiple conditions?</h3>
+                <div class="question"><h3>11. Which statement is used for multiple conditions?</h3>
                     <label><input type="radio" name="q11" value="A"> if-if</label>
                     <label><input type="radio" name="q11" value="B"> if-elif-else</label>
                     <label><input type="radio" name="q11" value="C"> loop-if</label>
                     <label><input type="radio" name="q11" value="D"> check-else</label>
                 </div>
-                <div class="question">
-                    <h3>12. Which function generates a sequence of numbers?</h3>
+                <div class="question"><h3>12. Which function generates a sequence of numbers?</h3>
                     <label><input type="radio" name="q12" value="A"> numbers()</label>
                     <label><input type="radio" name="q12" value="B"> sequence()</label>
                     <label><input type="radio" name="q12" value="C"> range()</label>
@@ -440,47 +194,38 @@
 
             <!-- ================= MODULE 3 ================= -->
             <section class="module card">
-                <div class="module-title">
-                    <span>Module 3</span>
-                    <h2>Lists, Tuples & Generators</h2>
-                </div>
-                <div class="question">
-                    <h3>13. Which collection is mutable?</h3>
+                <div class="module-title"><span>Module 3</span><h2>Lists, Tuples & Generators</h2></div>
+                <div class="question"><h3>13. Which collection is mutable?</h3>
                     <label><input type="radio" name="q13" value="A"> Tuple</label>
                     <label><input type="radio" name="q13" value="B"> List</label>
                     <label><input type="radio" name="q13" value="C"> String</label>
                     <label><input type="radio" name="q13" value="D"> None</label>
                 </div>
-                <div class="question">
-                    <h3>14. Which method adds an element to the end of a list?</h3>
+                <div class="question"><h3>14. Which method adds an element to the end of a list?</h3>
                     <label><input type="radio" name="q14" value="A"> insert()</label>
                     <label><input type="radio" name="q14" value="B"> add()</label>
                     <label><input type="radio" name="q14" value="C"> append()</label>
                     <label><input type="radio" name="q14" value="D"> push()</label>
                 </div>
-                <div class="question">
-                    <h3>15. Which method removes an item using its index?</h3>
+                <div class="question"><h3>15. Which method removes an item using its index?</h3>
                     <label><input type="radio" name="q15" value="A"> remove()</label>
                     <label><input type="radio" name="q15" value="B"> pop()</label>
                     <label><input type="radio" name="q15" value="C"> delete()</label>
                     <label><input type="radio" name="q15" value="D"> clear()</label>
                 </div>
-                <div class="question">
-                    <h3>16. Which keyword is used in a generator?</h3>
+                <div class="question"><h3>16. Which keyword is used in a generator?</h3>
                     <label><input type="radio" name="q16" value="A"> return</label>
                     <label><input type="radio" name="q16" value="B"> yield</label>
                     <label><input type="radio" name="q16" value="C"> generate</label>
                     <label><input type="radio" name="q16" value="D"> next</label>
                 </div>
-                <div class="question">
-                    <h3>17. A lambda function is a ______ function.</h3>
+                <div class="question"><h3>17. A lambda function is a ______ function.</h3>
                     <label><input type="radio" name="q17" value="A"> Named</label>
                     <label><input type="radio" name="q17" value="B"> Anonymous</label>
                     <label><input type="radio" name="q17" value="C"> Class</label>
                     <label><input type="radio" name="q17" value="D"> Loop</label>
                 </div>
-                <div class="question">
-                    <h3>18. Which function returns the next item from an iterator?</h3>
+                <div class="question"><h3>18. Which function returns the next item from an iterator?</h3>
                     <label><input type="radio" name="q18" value="A"> next()</label>
                     <label><input type="radio" name="q18" value="B"> forward()</label>
                     <label><input type="radio" name="q18" value="C"> move()</label>
@@ -490,40 +235,32 @@
 
             <!-- ================= MODULE 4 ================= -->
             <section class="module card">
-                <div class="module-title">
-                    <span>Module 4</span>
-                    <h2>Dictionaries & Sets</h2>
-                </div>
-                <div class="question">
-                    <h3>19. A dictionary stores data in ______ pairs.</h3>
+                <div class="module-title"><span>Module 4</span><h2>Dictionaries & Sets</h2></div>
+                <div class="question"><h3>19. A dictionary stores data in ______ pairs.</h3>
                     <label><input type="radio" name="q19" value="A"> value:value</label>
                     <label><input type="radio" name="q19" value="B"> key:value</label>
                     <label><input type="radio" name="q19" value="C"> index:value</label>
                     <label><input type="radio" name="q19" value="D"> key:index</label>
                 </div>
-                <div class="question">
-                    <h3>20. Which method safely retrieves a dictionary value?</h3>
+                <div class="question"><h3>20. Which method safely retrieves a dictionary value?</h3>
                     <label><input type="radio" name="q20" value="A"> find()</label>
                     <label><input type="radio" name="q20" value="B"> get()</label>
                     <label><input type="radio" name="q20" value="C"> search()</label>
                     <label><input type="radio" name="q20" value="D"> value()</label>
                 </div>
-                <div class="question">
-                    <h3>21. Which method returns dictionary keys?</h3>
+                <div class="question"><h3>21. Which method returns dictionary keys?</h3>
                     <label><input type="radio" name="q21" value="A"> keys()</label>
                     <label><input type="radio" name="q21" value="B"> key()</label>
                     <label><input type="radio" name="q21" value="C"> getkeys()</label>
                     <label><input type="radio" name="q21" value="D"> indexes()</label>
                 </div>
-                <div class="question">
-                    <h3>22. A set contains ______ values.</h3>
+                <div class="question"><h3>22. A set contains ______ values.</h3>
                     <label><input type="radio" name="q22" value="A"> Duplicate</label>
                     <label><input type="radio" name="q22" value="B"> Unique</label>
                     <label><input type="radio" name="q22" value="C"> Indexed</label>
                     <label><input type="radio" name="q22" value="D"> Ordered</label>
                 </div>
-                <div class="question">
-                    <h3>23. Which method adds an item to a set?</h3>
+                <div class="question"><h3>23. Which method adds an item to a set?</h3>
                     <label><input type="radio" name="q23" value="A"> append()</label>
                     <label><input type="radio" name="q23" value="B"> insert()</label>
                     <label><input type="radio" name="q23" value="C"> add()</label>
@@ -533,54 +270,44 @@
 
             <!-- ================= MODULE 5 ================= -->
             <section class="module card">
-                <div class="module-title">
-                    <span>Module 5</span>
-                    <h2>Files, ASCII & Pickle</h2>
-                </div>
-                <div class="question">
-                    <h3>24. Which mode is used to read a text file?</h3>
+                <div class="module-title"><span>Module 5</span><h2>Files, ASCII & Pickle</h2></div>
+                <div class="question"><h3>24. Which mode is used to read a text file?</h3>
                     <label><input type="radio" name="q24" value="A"> w</label>
                     <label><input type="radio" name="q24" value="B"> r</label>
                     <label><input type="radio" name="q24" value="C"> a</label>
                     <label><input type="radio" name="q24" value="D"> x</label>
                 </div>
-                <div class="question">
-                    <h3>25. Which mode is used to write to a file?</h3>
+                <div class="question"><h3>25. Which mode is used to write to a file?</h3>
                     <label><input type="radio" name="q25" value="A"> r</label>
                     <label><input type="radio" name="q25" value="B"> w</label>
                     <label><input type="radio" name="q25" value="C"> a</label>
                     <label><input type="radio" name="q25" value="D"> rb</label>
                 </div>
-                <div class="question">
-                    <h3>26. Which mode is used to append data?</h3>
+                <div class="question"><h3>26. Which mode is used to append data?</h3>
                     <label><input type="radio" name="q26" value="A"> r</label>
                     <label><input type="radio" name="q26" value="B"> w</label>
                     <label><input type="radio" name="q26" value="C"> a</label>
                     <label><input type="radio" name="q26" value="D"> x</label>
                 </div>
-                <div class="question">
-                    <h3>27. Which function returns the ASCII value of a character?</h3>
+                <div class="question"><h3>27. Which function returns the ASCII value of a character?</h3>
                     <label><input type="radio" name="q27" value="A"> chr()</label>
                     <label><input type="radio" name="q27" value="B"> ascii()</label>
                     <label><input type="radio" name="q27" value="C"> ord()</label>
                     <label><input type="radio" name="q27" value="D"> code()</label>
                 </div>
-                <div class="question">
-                    <h3>28. Which function converts an integer into a character?</h3>
+                <div class="question"><h3>28. Which function converts an integer into a character?</h3>
                     <label><input type="radio" name="q28" value="A"> ord()</label>
                     <label><input type="radio" name="q28" value="B"> chr()</label>
                     <label><input type="radio" name="q28" value="C"> char()</label>
                     <label><input type="radio" name="q28" value="D"> convert()</label>
                 </div>
-                <div class="question">
-                    <h3>29. Which function writes an object using Pickle?</h3>
+                <div class="question"><h3>29. Which function writes an object using Pickle?</h3>
                     <label><input type="radio" name="q29" value="A"> pickle.write()</label>
                     <label><input type="radio" name="q29" value="B"> pickle.dump()</label>
                     <label><input type="radio" name="q29" value="C"> pickle.save()</label>
                     <label><input type="radio" name="q29" value="D"> pickle.store()</label>
                 </div>
-                <div class="question">
-                    <h3>30. Which function reads a Pickle object?</h3>
+                <div class="question"><h3>30. Which function reads a Pickle object?</h3>
                     <label><input type="radio" name="q30" value="A"> pickle.read()</label>
                     <label><input type="radio" name="q30" value="B"> pickle.get()</label>
                     <label><input type="radio" name="q30" value="C"> pickle.load()</label>
@@ -590,47 +317,38 @@
 
             <!-- ================= MODULE 6 ================= -->
             <section class="module card">
-                <div class="module-title">
-                    <span>Module 6</span>
-                    <h2>Functions & Modules</h2>
-                </div>
-                <div class="question">
-                    <h3>31. Which keyword is used to define a function?</h3>
+                <div class="module-title"><span>Module 6</span><h2>Functions & Modules</h2></div>
+                <div class="question"><h3>31. Which keyword is used to define a function?</h3>
                     <label><input type="radio" name="q31" value="A"> function</label>
                     <label><input type="radio" name="q31" value="B"> define</label>
                     <label><input type="radio" name="q31" value="C"> def</label>
                     <label><input type="radio" name="q31" value="D"> fun</label>
                 </div>
-                <div class="question">
-                    <h3>32. Which keyword sends a value back from a function?</h3>
+                <div class="question"><h3>32. Which keyword sends a value back from a function?</h3>
                     <label><input type="radio" name="q32" value="A"> send</label>
                     <label><input type="radio" name="q32" value="B"> return</label>
                     <label><input type="radio" name="q32" value="C"> output</label>
                     <label><input type="radio" name="q32" value="D"> yield</label>
                 </div>
-                <div class="question">
-                    <h3>33. Which syntax represents arbitrary positional arguments?</h3>
+                <div class="question"><h3>33. Which syntax represents arbitrary positional arguments?</h3>
                     <label><input type="radio" name="q33" value="A"> *args</label>
                     <label><input type="radio" name="q33" value="B"> **args</label>
                     <label><input type="radio" name="q33" value="C"> &args</label>
                     <label><input type="radio" name="q33" value="D"> @args</label>
                 </div>
-                <div class="question">
-                    <h3>34. Which module provides mathematical functions?</h3>
+                <div class="question"><h3>34. Which module provides mathematical functions?</h3>
                     <label><input type="radio" name="q34" value="A"> datetime</label>
                     <label><input type="radio" name="q34" value="B"> math</label>
                     <label><input type="radio" name="q34" value="C"> random</label>
                     <label><input type="radio" name="q34" value="D"> sys</label>
                 </div>
-                <div class="question">
-                    <h3>35. Which function returns square root?</h3>
+                <div class="question"><h3>35. Which function returns square root?</h3>
                     <label><input type="radio" name="q35" value="A"> math.square()</label>
                     <label><input type="radio" name="q35" value="B"> math.root()</label>
                     <label><input type="radio" name="q35" value="C"> math.sqrt()</label>
                     <label><input type="radio" name="q35" value="D"> math.sq()</label>
                 </div>
-                <div class="question">
-                    <h3>36. Which module is used to work with dates and times?</h3>
+                <div class="question"><h3>36. Which module is used to work with dates and times?</h3>
                     <label><input type="radio" name="q36" value="A"> timeDate</label>
                     <label><input type="radio" name="q36" value="B"> calendar</label>
                     <label><input type="radio" name="q36" value="C"> datetime</label>
@@ -640,10 +358,7 @@
 
             <!-- ================= PRACTICAL ================= -->
             <section class="card practical-section">
-                <div class="module-title">
-                    <span>Practical</span>
-                    <h2>Programming Questions</h2>
-                </div>
+                <div class="module-title"><span>Practical</span><h2>Programming Questions</h2></div>
                 <div class="practical-question">
                     <h3>37. Write a Python program to print "Hello World" and numbers from 1 to 10.</h3>
                     <textarea name="p1" placeholder="Write your Python code here..."></textarea>
@@ -672,14 +387,14 @@
 
             <!-- Submit -->
             <div class="submit-box">
-                <button type="submit">Submit Assessment</button>
+                <button type="submit" id="submitAssessmentBtn">Submit Assessment</button>
             </div>
         </form>
 
         <!-- Result -->
         <div id="result" class="result-card">
             <div class="result-icon">🎉</div>
-            <h2>Assessment Submitted!</h2>
+            <h2 id="resultTitle">Assessment Submitted!</h2>
             <p id="studentResult"></p>
             <div class="score">
                 <span id="score">0</span>
@@ -705,7 +420,7 @@
         };
 
         const totalQuestions = Object.keys(answers).length;
-        let pdfHTMLContent = ""; // Global variable to store generated HTML for PDF
+        let pdfHTMLContent = ""; 
 
         // FORM SUBMISSION
         const form = document.getElementById("quizForm");
@@ -723,6 +438,11 @@
                 window.scrollTo({ top: 0, behavior: "smooth" });
                 return;
             }
+
+            // Change button text
+            const submitBtn = document.getElementById("submitAssessmentBtn");
+            submitBtn.innerText = "Submitting & Sending Email...";
+            submitBtn.disabled = true;
 
             // CALCULATE SCORE & COLLECT ANSWERS
             let score = 0;
@@ -747,18 +467,17 @@
                 return div.innerHTML;
             };
 
-            const p1 = esc(document.querySelector('textarea[name="p1"]').value);
-            const p2 = esc(document.querySelector('textarea[name="p2"]').value);
-            const p3 = esc(document.querySelector('textarea[name="p3"]').value);
-            const p4 = esc(document.querySelector('textarea[name="p4"]').value);
-            const p5 = esc(document.querySelector('textarea[name="p5"]').value);
-            const p6 = esc(document.querySelector('textarea[name="p6"]').value);
+            const p1 = document.querySelector('textarea[name="p1"]').value;
+            const p2 = document.querySelector('textarea[name="p2"]').value;
+            const p3 = document.querySelector('textarea[name="p3"]').value;
+            const p4 = document.querySelector('textarea[name="p4"]').value;
+            const p5 = document.querySelector('textarea[name="p5"]').value;
+            const p6 = document.querySelector('textarea[name="p6"]').value;
 
             // PREPARE HTML CONTENT FOR PDF
             pdfHTMLContent = `
                 <div style="padding: 40px; font-family: Arial, sans-serif; color: #333;">
                     <h1 style="color: #4f46e5; text-align: center; border-bottom: 2px solid #e5e7eb; padding-bottom: 15px;">Python Assessment Result</h1>
-                    
                     <div style="margin-top: 20px;">
                         <h2 style="color: #374151;">Student Details</h2>
                         <p><strong>Name:</strong> ${esc(studentName)}</p>
@@ -766,50 +485,80 @@
                         <p><strong>Email:</strong> ${esc(email)}</p>
                         <p><strong>Date:</strong> ${new Date().toLocaleString()}</p>
                     </div>
-
                     <div style="margin-top: 30px; background: #f3f4ff; padding: 20px; border-radius: 8px;">
                         <h2 style="color: #4f46e5; margin: 0;">MCQ Score: ${score} / ${totalQuestions} (${percentage}%)</h2>
                     </div>
-
                     <div style="margin-top: 30px;">
                         <h2 style="color: #374151; border-bottom: 1px solid #e5e7eb; padding-bottom: 10px;">Practical Code Submissions</h2>
-                        
-                        <div style="margin-top: 15px;">
-                            <strong>Q37: Print "Hello World" and numbers 1 to 10</strong>
-                            <pre style="background: #f4f7fb; padding: 15px; border-radius: 5px; border: 1px solid #d1d5db; white-space: pre-wrap; font-family: monospace;">${p1 || "No code submitted."}</pre>
-                        </div>
-                        
-                        <div style="margin-top: 15px;">
-                            <strong>Q38: Check whether a person is eligible to vote</strong>
-                            <pre style="background: #f4f7fb; padding: 15px; border-radius: 5px; border: 1px solid #d1d5db; white-space: pre-wrap; font-family: monospace;">${p2 || "No code submitted."}</pre>
-                        </div>
-
-                        <div style="margin-top: 15px;">
-                            <strong>Q39: Demonstrate list operations</strong>
-                            <pre style="background: #f4f7fb; padding: 15px; border-radius: 5px; border: 1px solid #d1d5db; white-space: pre-wrap; font-family: monospace;">${p3 || "No code submitted."}</pre>
-                        </div>
-
-                        <div style="margin-top: 15px;">
-                            <strong>Q40: Calculate Simple Interest</strong>
-                            <pre style="background: #f4f7fb; padding: 15px; border-radius: 5px; border: 1px solid #d1d5db; white-space: pre-wrap; font-family: monospace;">${p4 || "No code submitted."}</pre>
-                        </div>
-
-                        <div style="margin-top: 15px;">
-                            <strong>Q41: Find the ASCII value using ord()</strong>
-                            <pre style="background: #f4f7fb; padding: 15px; border-radius: 5px; border: 1px solid #d1d5db; white-space: pre-wrap; font-family: monospace;">${p5 || "No code submitted."}</pre>
-                        </div>
-
-                        <div style="margin-top: 15px;">
-                            <strong>Q42: Write and read data from a text file</strong>
-                            <pre style="background: #f4f7fb; padding: 15px; border-radius: 5px; border: 1px solid #d1d5db; white-space: pre-wrap; font-family: monospace;">${p6 || "No code submitted."}</pre>
-                        </div>
+                        <div style="margin-top: 15px;"><strong>Q37:</strong><pre style="background: #f4f7fb; padding: 15px; border-radius: 5px; border: 1px solid #d1d5db; white-space: pre-wrap;">${esc(p1) || "No code submitted."}</pre></div>
+                        <div style="margin-top: 15px;"><strong>Q38:</strong><pre style="background: #f4f7fb; padding: 15px; border-radius: 5px; border: 1px solid #d1d5db; white-space: pre-wrap;">${esc(p2) || "No code submitted."}</pre></div>
+                        <div style="margin-top: 15px;"><strong>Q39:</strong><pre style="background: #f4f7fb; padding: 15px; border-radius: 5px; border: 1px solid #d1d5db; white-space: pre-wrap;">${esc(p3) || "No code submitted."}</pre></div>
+                        <div style="margin-top: 15px;"><strong>Q40:</strong><pre style="background: #f4f7fb; padding: 15px; border-radius: 5px; border: 1px solid #d1d5db; white-space: pre-wrap;">${esc(p4) || "No code submitted."}</pre></div>
+                        <div style="margin-top: 15px;"><strong>Q41:</strong><pre style="background: #f4f7fb; padding: 15px; border-radius: 5px; border: 1px solid #d1d5db; white-space: pre-wrap;">${esc(p5) || "No code submitted."}</pre></div>
+                        <div style="margin-top: 15px;"><strong>Q42:</strong><pre style="background: #f4f7fb; padding: 15px; border-radius: 5px; border: 1px solid #d1d5db; white-space: pre-wrap;">${esc(p6) || "No code submitted."}</pre></div>
                     </div>
                 </div>
             `;
 
-            // SHOW RESULT CARD
-            document.getElementById("studentResult").innerHTML =
-                `Well done, <strong>${studentName}</strong>!<br>Roll Number: ${rollNumber}`;
+            // ==========================================
+            // PREPARE EMAIL DATA 
+            // ==========================================
+            const templateParams = {
+                name: studentName,
+                email: email,
+                student_name: studentName,
+                roll_number: rollNumber,
+                student_email: email,
+                score: score,
+                total: totalQuestions,
+                percentage: percentage,
+                practical_answers: `
+Q37:
+${p1 || "No Answer"}
+
+Q38:
+${p2 || "No Answer"}
+
+Q39:
+${p3 || "No Answer"}
+
+Q40:
+${p4 || "No Answer"}
+
+Q41:
+${p5 || "No Answer"}
+
+Q42:
+${p6 || "No Answer"}
+                `
+            };
+
+            // ==========================================
+            // SEND EMAIL VIA EMAILJS
+            // MAHATVACHE: "TUJHA_SERVICE_ID_ITHE_TAK" chya jagi tujha Service ID tak
+            // ==========================================
+            emailjs.send("service_s3dzh04", "927w7la", templateParams)
+                .then(function(response) {
+                    console.log("Email sent successfully!", response.status, response.text);
+                    
+                    document.getElementById("studentResult").innerHTML =
+                        `Well done, <strong>${studentName}</strong>!<br>Roll Number: ${rollNumber}<br><br><span style="color: #10b981; font-weight: bold;">✅ Answers successfully sent to instructor's email.</span>`;
+                    
+                    showResults(score, percentage);
+                    
+                }, function(error) {
+                    console.log("EmailJS Error:", error);
+                    alert("Network error mule email gela nahi. Krupaya PDF download karun instructor la submit kara.");
+                    
+                    document.getElementById("studentResult").innerHTML =
+                        `Well done, <strong>${studentName}</strong>!<br>Roll Number: ${rollNumber}<br><br><span style="color: #ef4444; font-weight: bold;">❌ Could not send email. Please download PDF.</span>`;
+                    
+                    showResults(score, percentage);
+                });
+        });
+
+        // Function to show results section
+        function showResults(score, percentage) {
             document.getElementById("score").textContent = score;
             document.getElementById("percentage").textContent = `MCQ Score: ${percentage}%`;
 
@@ -821,34 +570,34 @@
             const result = document.getElementById("result");
             result.style.display = "block";
             window.scrollTo({ top: 0, behavior: "smooth" });
-        });
+        }
 
-        // DOWNLOAD PDF BUTTON LOGIC
+        // ==========================================
+        // DOWNLOAD PDF BUTTON LOGIC (Updated for strict PDF download)
+        // ==========================================
         document.getElementById("downloadPdfBtn").addEventListener("click", function() {
             const rollNumber = document.getElementById("rollNumber").value.trim() || "Student";
             const studentName = document.getElementById("studentName").value.trim() || "Name";
             
-            // Create a temporary div to hold the HTML
             const element = document.createElement("div");
             element.innerHTML = pdfHTMLContent;
 
-            // Configure PDF options
             const opt = {
-                margin:       0.5,
+                margin:       10, // Margin added for PDF formatting
                 filename:     `${rollNumber}_${studentName}_Result.pdf`,
                 image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { scale: 2 },
-                jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+                html2canvas:  { scale: 2, useCORS: true }, 
+                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' } 
             };
 
-            // Change button text while processing
             const btn = document.getElementById("downloadPdfBtn");
+            const originalText = btn.innerText;
             btn.innerText = "Generating PDF...";
             
-            // Generate and Download PDF
-            html2pdf().set(opt).from(element).save().then(() => {
-                btn.innerText = "Download as PDF";
-            });
+            // Promise based method for strict PDF generation
+            html2pdf().set(opt).from(element).toPdf().get('pdf').then(function (pdf) {
+                btn.innerText = originalText;
+            }).save();
         });
 
         // PROGRESS BAR
